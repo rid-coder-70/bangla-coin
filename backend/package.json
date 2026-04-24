@@ -1,0 +1,8 @@
+{
+  "name": "bangla-coin-backend",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
