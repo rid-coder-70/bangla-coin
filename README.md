@@ -2,7 +2,18 @@
 
 Bangla Coin is an innovative, **Friction-First** Web3 platform designed to combat scams and fraud through dynamic transaction delays. Unlike traditional blockchains where transactions are instant and irreversible, Bangla Coin introduces a smart "Friction Engine" that slows down high-risk transfers, giving users a window to cancel suspicious transactions before they are finalized on the blockchain.
 
-![Bangla Coin Cover](https://via.placeholder.com/1200x600/022c22/10b981?text=Bangla+Coin)
+![Bangla Coin Cover](Images/BanglaCoinCover.png)
+
+## 📸 Screenshots
+
+### User Dashboard
+![User Dashboard](Images/UserDashboard.png)
+
+### Login & Signup
+<div align="center">
+  <img src="Images/Login.png" width="48%" />
+  <img src="Images/Signup.png" width="48%" />
+</div>
 
 ## 🌟 Key Features
 
