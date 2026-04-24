@@ -86,9 +86,14 @@ router.post('/vote', authenticateToken, async (req, res) => {
   db.prepare('UPDATE dao_proposals SET total_members = ? WHERE id = ?').run(memberCount, proposalId);
 
   // Check majority
-  const updated = db.prepare('SELECT yes_votes, total_members FROM dao_proposals WHERE id = ?').get(proposalId);
+  const updated = db.prepare('SELECT yes_votes, total_members, recipient, amount FROM dao_proposals WHERE id = ?').get(proposalId);
   if (updated.yes_votes * 2 > updated.total_members) {
     db.prepare('UPDATE dao_proposals SET executed = 1 WHERE id = ?').run(proposalId);
+    
+    // Credit the recipient's off-chain balance so they receive the funds
+    db.prepare(
+      "INSERT INTO transactions (tx_id, sender, recipient, amount, status, executed_at) VALUES (?, ?, ?, ?, 'executed', ?)"
+    ).run(-1, process.env.DAO_CONTRACT || 'DAO Treasury', updated.recipient, updated.amount, Date.now());
   }
 
   // Try on-chain (fire-and-forget)

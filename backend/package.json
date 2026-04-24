@@ -4,5 +4,8 @@
   "type": "commonjs",
   "scripts": {
     "start": "node src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }

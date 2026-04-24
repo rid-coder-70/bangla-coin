@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, ArrowDownLeft, RefreshCw, Send, CheckCircle2, Clock, CheckCircle, Activity, LayoutGrid, XCircle, Building2, Copy, Check } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, RefreshCw, Send, CheckCircle2, Clock, CheckCircle, Activity, LayoutGrid, XCircle, Building2 } from 'lucide-react';
 import FreezeButton from '../components/FreezeButton';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 function Skeleton({ className }) { return <div className={`skeleton ${className}`} />; }
 
-function TxRow({ tx, userWallet, index }) {
+function TxRow({ tx, userWallet, walletMap, index }) {
   const { t } = useTranslation();
   const isSend = tx.sender?.toLowerCase() === userWallet?.toLowerCase();
   
@@ -27,6 +27,12 @@ function TxRow({ tx, userWallet, index }) {
     cancelled: t('status_cancelled') 
   };
 
+  const counterAddr = isSend ? tx.recipient : tx.sender;
+  const resolved = walletMap?.[counterAddr?.toLowerCase()];
+  const displayLabel = resolved
+    ? (resolved.name ? `${resolved.name} (${resolved.phone})` : resolved.phone)
+    : (counterAddr === 'DAO Treasury' ? 'DAO Treasury' : counterAddr?.substring(0, 12) + '…');
+
   return (
     <div className={`flex items-center justify-between p-4 hover:bg-slate-50 rounded-xl transition-colors duration-150 animate-slide-up stagger-${Math.min(index+1,4)}`}>
       <div className="flex items-center gap-4">
@@ -37,9 +43,7 @@ function TxRow({ tx, userWallet, index }) {
           <p className="text-sm font-semibold text-slate-800">
             {isSend ? t('sent_to') : t('received_from')}
           </p>
-          <p className="text-xs font-mono text-slate-500">
-            {(isSend ? tx.recipient : tx.sender)?.substring(0,12)}…
-          </p>
+          <p className="text-xs text-slate-500 font-medium">{displayLabel}</p>
           <p className="text-[11px] text-slate-400 mt-0.5">{new Date(tx.created_at).toLocaleString()}</p>
         </div>
       </div>
@@ -60,20 +64,12 @@ function TxRow({ tx, userWallet, index }) {
 
 export default function Home({ token }) {
   const { t } = useTranslation();
-  const [balance, setBalance] = useState(null);
-  const [txs, setTxs]         = useState([]);
-  const [frozen, setFrozen]   = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [copied, setCopied]   = useState(false);
+  const [balance, setBalance]   = useState(null);
+  const [txs, setTxs]           = useState([]);
+  const [frozen, setFrozen]     = useState(false);
+  const [loading, setLoading]   = useState(true);
+  const [walletMap, setWalletMap] = useState({});
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-  const truncate = (addr) => addr ? `${addr.slice(0,8)}...${addr.slice(-6)}` : '';
-
-  const copyAddress = () => {
-    navigator.clipboard.writeText(user.wallet || '');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const fetchData = async () => {
     try {
@@ -82,7 +78,24 @@ export default function Home({ token }) {
         fetch(`${API}/wallet/txs`,     { headers:{Authorization:`Bearer ${token}`} }),
       ]);
       if (bRes.ok) { const d = await bRes.json(); setBalance(d.balance); }
-      if (tRes.ok) setTxs(await tRes.json());
+      if (tRes.ok) {
+        const data = await tRes.json();
+        setTxs(data);
+        // Resolve all unique wallet addresses to phone numbers
+        const myWallet = user.wallet?.toLowerCase();
+        const addrs = [...new Set(
+          data.flatMap(tx => [tx.sender, tx.recipient])
+            .filter(a => a && a !== 'DAO Treasury' && a.startsWith('0x') && a.toLowerCase() !== myWallet)
+        )];
+        const map = {};
+        await Promise.all(addrs.map(async addr => {
+          try {
+            const r = await fetch(`${API}/auth/lookup-wallet/${addr}`, { headers:{Authorization:`Bearer ${token}`} });
+            if (r.ok) { const d = await r.json(); map[addr.toLowerCase()] = d; }
+          } catch { /* ignore */ }
+        }));
+        setWalletMap(map);
+      }
     } catch(e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -125,14 +138,9 @@ export default function Home({ token }) {
                 <Building2 className="w-3 h-3" /> Agent
               </span>
             )}
-            <button onClick={copyAddress}
-              className="flex items-center gap-2 bg-black/20 border border-white/10 hover:border-white/25 rounded-xl px-4 py-2.5 backdrop-blur-md transition-all group">
-              <span className="text-xs font-mono text-emerald-50 opacity-90">{truncate(user.wallet)}</span>
-              {copied
-                ? <Check className="w-3.5 h-3.5 text-emerald-300" />
-                : <Copy className="w-3.5 h-3.5 text-white/40 group-hover:text-white/70 transition-colors" />
-              }
-            </button>
+            <span className="flex items-center gap-2 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 backdrop-blur-md">
+              <span className="text-xs font-semibold text-emerald-100 opacity-90 tracking-wide">{user.phone}</span>
+            </span>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/send"
@@ -184,7 +192,7 @@ export default function Home({ token }) {
           </div>
         ) : (
           <div className="divide-y divide-slate-50">
-            {txs.map((tx,i) => <TxRow key={tx.id} tx={tx} userWallet={user.wallet} index={i}/>)}
+            {txs.map((tx,i) => <TxRow key={tx.id} tx={tx} userWallet={user.wallet} walletMap={walletMap} index={i}/>)}
           </div>
         )}
       </div>

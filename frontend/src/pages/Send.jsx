@@ -1,25 +1,61 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, ShieldAlert, ShieldCheck, Send as SendIcon, Loader2, ArrowLeft, Info } from 'lucide-react';
+import { Shield, ShieldAlert, ShieldCheck, Send as SendIcon, Loader2, ArrowLeft, Info, Phone, User } from 'lucide-react';
 import FrictionTimer from '../components/FrictionTimer';
 import FlagWarning from '../components/FlagWarning';
 import Toast from '../components/Toast';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+const isPhone = (val) => val && !val.startsWith('0x') && val.trim().length >= 6;
+
 export default function Send({ token }) {
   const { t } = useTranslation();
   const [recipient, setRecipient] = useState('');
-  const [amount, setAmount]       = useState('');
+  const [amount, setAmount] = useState('');
   const [flagCount, setFlagCount] = useState(0);
-  const [checking, setChecking]   = useState(false);
-  const [loading, setLoading]     = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [pendingTx, setPendingTx] = useState(null);
-  const [success, setSuccess]     = useState('');
-  const [error, setError]         = useState('');
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+  // Phone-specific state
+  const [lookupUser, setLookupUser] = useState(null);  // { name, wallet }
+  const [lookupErr, setLookupErr] = useState('');
+  const [lookingUp, setLookingUp] = useState(false);
+
+  // Live phone lookup with debounce
+  useEffect(() => {
+    setLookupUser(null); setLookupErr('');
+    if (!isPhone(recipient)) {
+      // if it's a hex address, run flag check instead
+      if (recipient.startsWith('0x') && recipient.length > 10) checkFlags(recipient);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setLookingUp(true);
+      try {
+        const res = await fetch(`${API}/auth/lookup-phone/${encodeURIComponent(recipient.trim())}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const d = await res.json();
+          setLookupUser(d);
+          // also check flags on the resolved wallet
+          checkFlags(d.wallet);
+        } else {
+          const d = await res.json();
+          setLookupErr(d.error || 'User not found');
+        }
+      } catch { setLookupErr('Lookup failed'); }
+      finally { setLookingUp(false); }
+    }, 600);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recipient]);
 
   const checkFlags = async (addr) => {
-    if (addr.length < 10) { setFlagCount(0); return; }
+    if (!addr || addr.length < 10) { setFlagCount(0); return; }
     setChecking(true);
     try {
       const res = await fetch(`${API}/flag/count/${addr}`);
@@ -34,14 +70,17 @@ export default function Send({ token }) {
       const res = await fetch(`${API}/transfer/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ recipient, amount: Number(amount) }),
+        body: JSON.stringify({ recipient: recipient.trim(), amount: Number(amount) }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+      const displayRecipient = lookupUser
+        ? `${lookupUser.name || recipient} (${lookupUser.wallet.slice(0, 6)}…)`
+        : recipient;
       if (data.delay === 0) {
-        setSuccess(t('send_instant')); setRecipient(''); setAmount(''); setFlagCount(0);
+        setSuccess(t('send_instant')); setRecipient(''); setAmount(''); setFlagCount(0); setLookupUser(null);
       } else {
-        setPendingTx({ txId: data.txId, delay: data.delay, recipient, amount, reasons: data.reasons || [] });
+        setPendingTx({ txId: data.txId, delay: data.delay, recipient: displayRecipient, amount, reasons: data.reasons || [] });
       }
     } catch (err) { setError(err.message || 'Transfer failed'); }
     finally { setLoading(false); }
@@ -62,7 +101,7 @@ export default function Send({ token }) {
 
   const handleConfirm = () => {
     setPendingTx(null); setSuccess(t('send_success'));
-    setRecipient(''); setAmount(''); setFlagCount(0);
+    setRecipient(''); setAmount(''); setFlagCount(0); setLookupUser(null);
   };
 
   if (pendingTx) {
@@ -84,6 +123,8 @@ export default function Send({ token }) {
   }
 
   const amt = Number(amount);
+  const canSend = recipient && amount && !loading && !lookingUp &&
+    (isPhone(recipient) ? !!lookupUser : true) && !lookupErr;
 
   return (
     <div className="max-w-md mx-auto space-y-5">
@@ -107,19 +148,57 @@ export default function Send({ token }) {
         </div>
       </div>
 
-      {flagCount > 0 && <FlagWarning flagCount={flagCount} address={recipient} canReport={false}/>}
+      {flagCount > 0 && <FlagWarning flagCount={flagCount} address={lookupUser?.wallet || recipient} canReport={false} />}
 
       <form onSubmit={handleSend} className="card space-y-6 animate-slide-up stagger-2 border-slate-100 shadow-md">
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2">
-            {t('recipient')}
-            {checking && <span className="ml-2 text-xs text-slate-400 font-medium animate-pulse flex items-center gap-1 inline-flex"><Loader2 className="w-3 h-3 animate-spin"/> {t('checking')}</span>}
+            Recipient — Phone Number
+            {(checking || lookingUp) && (
+              <span className="ml-2 text-xs text-slate-400 font-medium animate-pulse inline-flex items-center gap-1">
+                <Loader2 className="w-3 h-3 animate-spin" /> {isPhone(recipient) ? 'Looking up…' : t('checking')}
+              </span>
+            )}
           </label>
-          <input type="text" value={recipient}
-            onChange={e => { setRecipient(e.target.value); checkFlags(e.target.value); }}
-            className={`input font-mono text-sm bg-slate-50 ${flagCount >= 3 ? 'border-red-400 focus:ring-red-400' : ''}`}
-            placeholder={t('recipient_placeholder')} required/>
-          {recipient.length > 5 && flagCount === 0 && !checking && (
+
+          <div className="relative">
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+              <Phone className="w-4 h-4" />
+            </span>
+            <input
+              type="text"
+              value={recipient}
+              onChange={e => { setRecipient(e.target.value); setLookupUser(null); setLookupErr(''); setFlagCount(0); }}
+              className={`input pl-9 font-mono text-sm bg-slate-50 ${flagCount >= 3 ? 'border-red-400 focus:ring-red-400'
+                : lookupErr ? 'border-red-400 focus:ring-red-400'
+                  : lookupUser ? 'border-emerald-400 focus:ring-emerald-400'
+                    : ''
+                }`}
+              placeholder="01xxxxxxxxxx"
+              required
+            />
+          </div>
+
+          {/* Resolved user card */}
+          {lookupUser && (
+            <div className="mt-2 flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 animate-fade-in">
+              <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                <User className="w-4 h-4 text-emerald-600" />
+              </div>
+              <p className="text-sm font-bold text-emerald-800">{lookupUser.name || 'Unnamed User'}</p>
+              <ShieldCheck className="w-4 h-4 text-emerald-500 ml-auto flex-shrink-0" />
+            </div>
+          )}
+
+          {/* Lookup error */}
+          {lookupErr && (
+            <p className="text-xs text-red-500 mt-2 font-semibold flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5" /> {lookupErr}
+            </p>
+          )}
+
+          {/* Clean hex address */}
+          {!isPhone(recipient) && recipient.length > 5 && flagCount === 0 && !checking && (
             <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1.5 font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" />
               {t('address_clean')}
@@ -131,18 +210,18 @@ export default function Send({ token }) {
           <label className="block text-sm font-bold text-slate-700 mb-2">{t('amount')}</label>
           <div className="relative">
             <input type="number" value={amount} onChange={e => setAmount(e.target.value)}
-              className="input pr-16 text-lg font-bold bg-slate-50" placeholder={t('amount_placeholder')} required min="1"/>
+              className="input pr-16 text-lg font-bold bg-slate-50" placeholder={t('amount_placeholder')} required min="1" />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">BDT</span>
           </div>
           {amt > 0 && (
-            <p className={`text-xs mt-2 font-semibold flex items-center gap-1.5 ${amt>5000?'text-red-500':amt>=1000?'text-amber-500':'text-emerald-600'}`}>
-              {amt>5000 ? <ShieldAlert className="w-3 h-3" /> : <Info className="w-3 h-3" />}
-              {amt>5000 ? t('high_risk_hint') : amt>=1000 ? t('medium_risk_hint') : t('low_risk_hint')}
+            <p className={`text-xs mt-2 font-semibold flex items-center gap-1.5 ${amt > 5000 ? 'text-red-500' : amt >= 1000 ? 'text-amber-500' : 'text-emerald-600'}`}>
+              {amt > 5000 ? <ShieldAlert className="w-3 h-3" /> : <Info className="w-3 h-3" />}
+              {amt > 5000 ? t('high_risk_hint') : amt >= 1000 ? t('medium_risk_hint') : t('low_risk_hint')}
             </p>
           )}
         </div>
 
-        <button type="submit" disabled={loading || !recipient || !amount}
+        <button type="submit" disabled={!canSend}
           className="w-full btn btn-primary text-base py-3.5 disabled:opacity-60 disabled:cursor-not-allowed mt-2">
           {loading
             ? <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" /> {t('analysing')}</span>
@@ -154,12 +233,12 @@ export default function Send({ token }) {
       <div className="card text-xs text-slate-500 space-y-2.5 animate-slide-up stagger-3 bg-slate-50 border-slate-100">
         <p className="font-bold text-slate-700 mb-2 flex items-center gap-2"><Info className="w-4 h-4" /> {t('risk_rules_title')}</p>
         {[
-          ['R1','First-time recipient / নতুন প্রাপক','10s'],
-          ['R2','1,000–5,000 BDT','30s'],
-          ['R3','> 5,000 BDT','60s'],
-          ['R4','Flagged ×3+ / ফ্ল্যাগড ×৩+','120s ⚠️'],
-          ['R5','5 sends/hr / ঘণ্টায় ৫+','60s'],
-          ['R6','Score > 70','180s max'],
+          ['R1', 'First-time recipient / নতুন প্রাপক', '10s'],
+          ['R2', '1,000–5,000 BDT', '30s'],
+          ['R3', '> 5,000 BDT', '60s'],
+          ['R4', 'Flagged ×3+ / ফ্ল্যাগড ×৩+', '120s ⚠️'],
+          ['R5', '5 sends/hr / ঘণ্টায় ৫+', '60s'],
+          ['R6', 'Score > 70', '180s max'],
         ].map(([id, desc, act]) => (
           <div key={id} className="flex items-center justify-between py-1 border-b border-slate-200/50 last:border-0">
             <span className="flex items-center gap-2">

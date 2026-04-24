@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wallet, Send as SendIcon, Users, Search, LogOut, Globe, Fingerprint,
+import { Wallet, Send as SendIcon, Users, LogOut, Globe, Fingerprint,
          Phone, ShieldCheck, User, ArrowRight, ChevronLeft, Sparkles } from 'lucide-react';
 import Home     from './pages/Home';
 import Send     from './pages/Send';
 import DAO      from './pages/DAO';
-import Explorer from './pages/Explorer';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -324,7 +323,6 @@ function AppShell({ token, onLogout }) {
               <NavLink to="/"         icon={Wallet}   label={t('nav_wallet')} />
               <NavLink to="/send"     icon={SendIcon} label={t('nav_send')} />
               <NavLink to="/dao"      icon={Users}    label={t('nav_dao')} />
-              <NavLink to="/explorer" icon={Search}   label={t('nav_explorer')} />
 
               <div className="ml-2 pl-2 border-l border-slate-200 flex items-center gap-2">
                 <LangToggle />
@@ -346,7 +344,6 @@ function AppShell({ token, onLogout }) {
             <Route path="/"         element={<Home     token={token} />} />
             <Route path="/send"     element={<Send     token={token} />} />
             <Route path="/dao"      element={<DAO      token={token} />} />
-            <Route path="/explorer" element={<Explorer />} />
             <Route path="*"         element={<Navigate to="/" />} />
           </Routes>
         </main>

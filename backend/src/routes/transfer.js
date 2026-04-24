@@ -9,13 +9,21 @@ const router   = express.Router();
 
 // POST /transfer/send
 router.post('/send', authenticateToken, async (req, res) => {
-  const { recipient, amount } = req.body;
+  let { recipient, amount } = req.body;
   const sender = req.user.wallet;
   const amt    = Number(amount);
 
   if (!recipient || isNaN(amt) || amt <= 0) {
     return res.status(400).json({ error: 'Invalid recipient or amount' });
   }
+
+  // Resolve phone number → wallet address
+  if (!recipient.startsWith('0x')) {
+    const user = db.prepare('SELECT wallet_address, name FROM users WHERE phone = ?').get(recipient);
+    if (!user) return res.status(404).json({ error: `No user found with phone number ${recipient}` });
+    recipient = user.wallet_address;
+  }
+
 
   try {
     // Check frozen
