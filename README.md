@@ -1,7 +1,7 @@
 # User App Demo: [bangla-coin-sust.vercel.app](https://bangla-coin-sust.vercel.app) <br/>
-There was a slight mistake while filling out the submission form for Friction Hackathon.
-Instead of “bangla-coin-sust.vercel.app” , we mistakenly wrote “bangla_coin_sust.vercel.app”
-Please visit the correct link. We apologize for this mistake.
+*There was a slight mistake while filling out the submission form for Friction Hackathon.
+Instead of `bangla-coin-sust.vercel.app` , we mistakenly wrote `bangla_coin_sust.vercel.app`
+Please visit the correct link. We apologize for this mistake.*
 
 **Video Presentation and Project Document**: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
 
