@@ -4,7 +4,7 @@ Instead of `bangla-coin-sust.vercel.app` , we mistakenly wrote `bangla_coin_sust
 Please visit the correct link. We apologize for this mistake.*
 
 #### Default Credentials
-`010000000001`, `010000000002` are agent accounts. Any other account with any phone number is regular user account. The default OTP is `123456`.
+`010000000001`, `010000000002` are agent accounts. Accounts with any phone number is regular user account. The default OTP is `123456`.
 
 **Video Presentation and Project Document**: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
 
@@ -147,7 +147,7 @@ bangla-coin/
 ├── bangla-chain/          # Automation scripts to download and run Polygon Edge nodes
 ├── contracts/             # Hardhat project (Solidity contracts + deploy scripts)
 ├── api-gateway/           # Port 5000: Central Express API (Risk Engine + FallbackProvider)
-├── gateway-admin/         # Port 6000: React UI monitoring the Gateway
+├── gateway-admin/         # Port 6001: React UI monitoring the Gateway
 ├── validator-template/    # Base code for Validator node backend/UI (to be duplicated later)
 │   ├── backend/           # Express server listening to EVM events + Voting
 │   └── frontend/          # React dashboard for approving/rejecting bans
@@ -174,7 +174,7 @@ Run these commands first to install Node.js packages:
 ## Ports
 * 10001, 10002, 10003 -> Hardhat RPC Nodes (Managed via bash scripts you will write).
 * 5000 -> Main API Gateway (Node.js)
-* 6000 -> Main API Gateway Admin UI (React)
+* 6001 -> Main API Gateway Admin UI (React)
 * 3001, 3002, 3003 -> Validator Backends 1, 2, and 3 (Node.js)
 * 4001, 4002, 4003 -> Validator Admin UIs 1, 2, and 3 (React)
 * 3000 -> Bangla Coin User App (React)
@@ -193,7 +193,7 @@ sudo chmod +x ./start-all.sh && ./start-all.sh
 
 ### Default Credentials 
 
- - `user-app`: `010000000001`, `010000000002` are agent accounts. Any other account with any phone number is regular user account. The default OTP is `123456`.
+ - `user-app`: `010000000001`, `010000000002` are agent accounts. Accounts with any phone number is regular user account. The default OTP is `123456`.
  - `Validator Node Admin Panel`: The handle is `admin` and password is `admin`.
 
 ---
