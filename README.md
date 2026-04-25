@@ -4,7 +4,7 @@ Instead of `bangla-coin-sust.vercel.app` , we mistakenly wrote `bangla_coin_sust
 Please visit the correct link. We apologize for this mistake.*
 
 #### Default Credentials
-`010000000001`, `010000000002` are agent accounts. Accounts with any phone number is regular user account. The default OTP is `123456`.
+`010000000001`, `010000000002` are agent accounts. Accounts with any other phone number is regular user account. The default OTP is `123456`.
 
 **Video Presentation and Project Document**: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
 
@@ -193,7 +193,7 @@ sudo chmod +x ./start-all.sh && ./start-all.sh
 
 ### Default Credentials 
 
- - `user-app`: `010000000001`, `010000000002` are agent accounts. Accounts with any phone number is regular user account. The default OTP is `123456`.
+ - `user-app`: `010000000001`, `010000000002` are agent accounts. Accounts with any other phone number is regular user account. The default OTP is `123456`.
  - `Validator Node Admin Panel`: The handle is `admin` and password is `admin`.
 
 ---
