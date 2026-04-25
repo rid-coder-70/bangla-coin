@@ -8,6 +8,20 @@ export default {
     hardhat: {
       chainId: 1337,
     },
+    // ─── 3-Node Local Network ────────────────────────────────────
+    node1: {
+      url: "http://127.0.0.1:10001",
+      chainId: 1337,
+    },
+    node2: {
+      url: "http://127.0.0.1:10002",
+      chainId: 1337,
+    },
+    node3: {
+      url: "http://127.0.0.1:10003",
+      chainId: 1337,
+    },
+    // Legacy single-node (kept for backward compat)
     localhost: {
       url: "http://127.0.0.1:8545",
       chainId: 1337,

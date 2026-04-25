@@ -20,7 +20,7 @@ contract Transfer {
 
     address public owner;
     uint256 public txCounter;
-    uint256 public constant MAX_DELAY = 180; // 3 minutes hard cap
+    uint256 public constant MAX_DELAY = 60; // 60 seconds hard cap
 
     // ─── Events ───────────────────────────────────────────────────────────────
     event TransferQueued(uint256 indexed txId, address indexed from, address indexed to, uint256 amount, uint256 unlockTime);
