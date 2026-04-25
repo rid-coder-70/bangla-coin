@@ -124,9 +124,20 @@ The risk engine operates off-chain (Node.js), generating a risk score that dicta
 | **R5** | 5+ transfers in 1 hour | +35 pts | 1 min delay + freeze prompt |
 | **R6** | **Total Score > 70** | **Escalate** | 3 min lock + dual confirm (Hard Cap) |
 
----
-*Developed for the 2026 Friction Hackathon by SUST SONGLAP.*
 
+
+## DIRECTORY STRUCTURE TO BUILD
+```
+bangla-coin/
+├── bangla-chain/          # Automation scripts to download and run Polygon Edge nodes
+├── contracts/             # Hardhat project (Solidity contracts + deploy scripts)
+├── api-gateway/           # Port 5000: Central Express API (Risk Engine + FallbackProvider)
+├── gateway-admin/         # Port 6000: React UI monitoring the Gateway
+├── validator-template/    # Base code for Validator node backend/UI (to be duplicated later)
+│   ├── backend/           # Express server listening to EVM events + Voting
+│   └── frontend/          # React dashboard for approving/rejecting bans
+└── user-app/              # Port 3000: React Web App for end-users
+```
 
 
 ## 🚀 Quick Start Guide
@@ -144,6 +155,14 @@ Run these commands first to install Node.js packages:
 `cd validator-template/frontend && npm install`
 
 `cd validator-template/backend && npm install`
+
+## Ports
+* 10001, 10002, 10003 -> Hardhat RPC Nodes (Managed via bash scripts you will write).
+* 5000 -> Main API Gateway (Node.js)
+* 6000 -> Main API Gateway Admin UI (React)
+* 3001, 3002, 3003 -> Validator Backends 1, 2, and 3 (Node.js)
+* 4001, 4002, 4003 -> Validator Admin UIs 1, 2, and 3 (React)
+* 3000 -> Bangla Coin User App (React)
 
 ### on Windows
 
