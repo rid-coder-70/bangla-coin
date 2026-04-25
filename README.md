@@ -179,5 +179,10 @@ Run these commands first to install Node.js packages:
 sudo chmod +x ./start-all.sh && ./start-all.sh
 ```
 
+### Default Credentials 
+
+ - `user-app`: `010000000001`, `010000000002` are agent accounts. Any other account with any phone number is regular user account. The default OTP is `123456`.
+ - `Validator Node Admin Panel`: The handle is `admin` and password is `admin`.
+
 ---
 *Built for the Friction Hackathon 2026 by Team SUST SONGLAP*
