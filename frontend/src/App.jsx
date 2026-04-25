@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } f
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wallet, Send as SendIcon, Users, LogOut, Globe, Fingerprint,
-         Phone, ShieldCheck, User, ArrowRight, ChevronLeft, Sparkles } from 'lucide-react';
+         Phone, ShieldCheck, User, ArrowRight, ChevronLeft, Sparkles, Building2 } from 'lucide-react';
 import Home     from './pages/Home';
 import Send     from './pages/Send';
 import DAO      from './pages/DAO';
+import AgentPage from './pages/Agent';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -323,6 +324,7 @@ function AppShell({ token, onLogout }) {
               <NavLink to="/"         icon={Wallet}   label={t('nav_wallet')} />
               <NavLink to="/send"     icon={SendIcon} label={t('nav_send')} />
               <NavLink to="/dao"      icon={Users}    label={t('nav_dao')} />
+              {user.role === 'agent' && <NavLink to="/agent" icon={Building2} label="Agent" />}
 
               <div className="ml-2 pl-2 border-l border-slate-200 flex items-center gap-2">
                 <LangToggle />
@@ -344,6 +346,7 @@ function AppShell({ token, onLogout }) {
             <Route path="/"         element={<Home     token={token} />} />
             <Route path="/send"     element={<Send     token={token} />} />
             <Route path="/dao"      element={<DAO      token={token} />} />
+            <Route path="/agent"    element={<AgentPage token={token} />} />
             <Route path="*"         element={<Navigate to="/" />} />
           </Routes>
         </main>
@@ -357,7 +360,11 @@ export default function App() {
   const [token, setToken]   = useState(() => localStorage.getItem('token'));
   const [page, setPage]     = useState('login'); // 'login' | 'signup'
 
-  const handleLogin = (t) => setToken(t);
+  const handleLogin = (t) => {
+    setToken(t);
+    // Force navigate to home so stale routes like /agent don't persist
+    if (window.location.pathname !== '/') window.history.replaceState(null, '', '/');
+  };
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

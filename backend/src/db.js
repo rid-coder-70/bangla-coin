@@ -103,6 +103,74 @@ db.exec(`
     PRIMARY KEY (proposal_id, voter),
     FOREIGN KEY (proposal_id) REFERENCES dao_proposals(id)
   );
+
+  CREATE TABLE IF NOT EXISTS agent_locations (
+    user_id    INTEGER PRIMARY KEY,
+    latitude   REAL NOT NULL DEFAULT 0,
+    longitude  REAL NOT NULL DEFAULT 0,
+    city       TEXT NOT NULL DEFAULT '',
+    division   TEXT NOT NULL DEFAULT '',
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS agent_chat_messages (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id   INTEGER NOT NULL,
+    sender_name TEXT NOT NULL DEFAULT '',
+    message     TEXT NOT NULL,
+    range       TEXT NOT NULL DEFAULT 'near',
+    city        TEXT NOT NULL DEFAULT '',
+    division    TEXT NOT NULL DEFAULT '',
+    created_at  INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+    FOREIGN KEY (sender_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS dao_join_requests (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id         INTEGER NOT NULL,
+    requester_wallet TEXT NOT NULL,
+    requester_name   TEXT NOT NULL DEFAULT '',
+    yes_votes        INTEGER NOT NULL DEFAULT 0,
+    no_votes         INTEGER NOT NULL DEFAULT 0,
+    total_members    INTEGER NOT NULL DEFAULT 1,
+    status           TEXT NOT NULL DEFAULT 'pending',
+    created_at       INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+    FOREIGN KEY (group_id) REFERENCES dao_groups(id),
+    UNIQUE(group_id, requester_wallet)
+  );
+
+  CREATE TABLE IF NOT EXISTS dao_join_votes (
+    request_id INTEGER NOT NULL,
+    voter      TEXT NOT NULL,
+    approve    INTEGER NOT NULL,
+    voted_at   INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+    PRIMARY KEY (request_id, voter),
+    FOREIGN KEY (request_id) REFERENCES dao_join_requests(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS dao_remove_polls (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id        INTEGER NOT NULL,
+    target_wallet   TEXT NOT NULL,
+    target_name     TEXT NOT NULL DEFAULT '',
+    proposer_wallet TEXT NOT NULL,
+    yes_votes       INTEGER NOT NULL DEFAULT 0,
+    no_votes        INTEGER NOT NULL DEFAULT 0,
+    total_members   INTEGER NOT NULL DEFAULT 1,
+    status          TEXT NOT NULL DEFAULT 'pending',
+    created_at      INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+    FOREIGN KEY (group_id) REFERENCES dao_groups(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS dao_remove_votes (
+    poll_id  INTEGER NOT NULL,
+    voter    TEXT NOT NULL,
+    approve  INTEGER NOT NULL,
+    voted_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+    PRIMARY KEY (poll_id, voter),
+    FOREIGN KEY (poll_id) REFERENCES dao_remove_polls(id)
+  );
 `);
 
 // ─── Safe migrations for existing databases ──────────────────────────────────

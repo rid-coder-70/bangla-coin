@@ -16,6 +16,7 @@ const daoRoutes      = require('./routes/dao');
 const flagRoutes     = require('./routes/flag');
 const freezeRoutes   = require('./routes/freeze');
 const ledgerRoutes   = require('./routes/ledger');
+const agentRoutes    = require('./routes/agent');
 
 const app    = express();
 const server = http.createServer(app);
@@ -34,6 +35,7 @@ app.use('/dao',      daoRoutes);
 app.use('/flag',     flagRoutes);
 app.use('/freeze',   freezeRoutes);
 app.use('/ledger',   ledgerRoutes);
+app.use('/agent',    agentRoutes);
 
 // ─── Global error handler ────────────────────────────────────
 app.use((err, req, res, next) => {
