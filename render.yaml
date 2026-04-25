@@ -1,0 +1,47 @@
+services:
+  # --- BLOCKCHAIN NODES (Private Workers) ---
+  - type: worker
+    name: edge-node-1
+    env: node
+    buildCommand: npm install
+    startCommand: npx hardhat node --port 10001
+    envVars:
+      - key: PORT
+        value: 10001
+
+  # --- API GATEWAY (Web Service - Public) ---
+  - type: web
+    name: bc-gateway
+    env: node
+    rootDir: api-gateway
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+
+  # --- VALIDATOR BACKENDS (Private Workers) ---
+  - type: worker
+    name: validator-1-backend
+    env: node
+    rootDir: validator-template/backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: VALIDATOR_PORT
+        value: 3001
+      - key: RPC_URL
+        value: http://edge-node-1:10001
+      - key: GATEWAY_URL
+        value: http://bc-gateway:5000
+
+  # --- USER & ADMIN UIs (Static Sites - Public) ---
+  - type: web
+    name: gateway-admin-ui
+    env: static
+    rootDir: gateway-admin
+    buildCommand: npm install && npm run build
+    staticPublishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://bc-gateway.onrender.com # Use PUBLIC URL here
