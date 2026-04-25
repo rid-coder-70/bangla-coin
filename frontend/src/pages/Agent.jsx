@@ -103,13 +103,7 @@ function CashTab({ token }) {
           {balance != null ? Number(balance).toLocaleString() : '—'}
           <span className="text-lg font-bold text-emerald-300 ml-2">BDT</span>
         </p>
-        <button onClick={handleMint} disabled={minting}
-          className="flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/20 backdrop-blur-md rounded-xl px-5 py-2.5 text-sm font-bold transition-all disabled:opacity-50">
-          {minting
-            ? <Loader2 className="w-4 h-4 animate-spin" />
-            : <ArrowDownToLine className="w-4 h-4" />}
-          {minting ? t('minting_bdt') : t('request_bdt')}
-        </button>
+
       </div>
 
 
