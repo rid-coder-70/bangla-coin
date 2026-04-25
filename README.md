@@ -43,8 +43,47 @@ In summary, Bangla Coin is not just a payment tool; it is a safety net. It empow
 
 ## 📸 Screenshots
 
+## 1. Project Identity
+![Bangla Coin Cover](Images/BanglaCoinCover.png)
+
+---
+
+## 2. User Onboarding
+| Signup Page | Login Page |
+| :---: | :---: |
+| ![Signup](Images/Signup.png) | ![Login](Images/Login.png) |
+
+---
+
+## 3. Core Application Interface
 ### User Dashboard
+The central hub for managing BDT balances and viewing transaction history.
 ![User Dashboard](Images/UserDashboard.png)
+
+### The Friction Engine in Action
+A live visualization of the on-chain delay enforced by the risk engine.
+![Friction Timer](Images/FrictionTime.png)
+
+---
+
+## 4. Community Wallet (DAO)
+These screens demonstrate the decentralized governance of group funds.
+| Wallet Overview | Proposal Approval |
+| :---: | :---: |
+| ![Community Wallet](Images/Community%20Wallet.png) | ![Community Proposal](Images/CommunityProposal_Approval.png) |
+
+---
+
+## 5. Infrastructure & Administration
+Monitoring the health of the Gateway and the PoA Validator network.
+
+### API Gateway Management
+![Gateway Admin](Images/Gateway_Admin.png)
+
+### Validator Node Metrics
+| Node Status | Node Admin |
+| :---: | :---: |
+| ![Validator Node Status](Images/ValidatorNode_Status.png) | ![Validator Node Admin](Images/ValidatorNode_Admin.png) |
 
 ---
 
