@@ -134,10 +134,15 @@ The risk engine operates off-chain (Node.js), generating a risk score that dicta
 Run these commands first to install Node.js packages:
 
 `npm install`
+
 `cd user-app && npm install`
+
 `cd api-gateway && npm install`
+
 `cd gateway-admin && npm install`
+
 `cd validator-template/frontend && npm install`
+
 `cd validator-template/backend && npm install`
 
 ### on Windows
