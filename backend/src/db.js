@@ -70,6 +70,7 @@ db.exec(`
     owner      TEXT NOT NULL,
     treasury   REAL NOT NULL DEFAULT 0,
     contract   TEXT,
+    phone      TEXT,
     created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
   );
 

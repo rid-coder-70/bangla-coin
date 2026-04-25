@@ -11,14 +11,6 @@ function requireAgent(req, res, next) {
   next();
 }
 
-// ─── POST /agent/mint — Add 10,000 BDT to agent balance ─────
-router.post('/mint', authenticateToken, requireAgent, (req, res) => {
-  const MINT_AMOUNT = 10000;
-  db.prepare('UPDATE users SET initial_credit = initial_credit + ? WHERE id = ?')
-    .run(MINT_AMOUNT, req.user.id);
-  const user = db.prepare('SELECT initial_credit FROM users WHERE id = ?').get(req.user.id);
-  res.json({ message: `Minted ${MINT_AMOUNT.toLocaleString()} BDT`, balance: user.initial_credit });
-});
 
 // ─── POST /agent/cash-in — Instant 0-delay transfer to user ─
 router.post('/cash-in', authenticateToken, requireAgent, (req, res) => {
@@ -60,9 +52,14 @@ router.post('/cash-in', authenticateToken, requireAgent, (req, res) => {
 
 // ─── GET /agent/history — Agent transaction log ─────────────
 router.get('/history', authenticateToken, requireAgent, (req, res) => {
-  const txs = db.prepare(
-    'SELECT * FROM transactions WHERE sender = ? OR recipient = ? ORDER BY created_at DESC LIMIT 100'
-  ).all(req.user.wallet, req.user.wallet);
+  const txs = db.prepare(`
+    SELECT t.*, u1.phone as sender_phone, u2.phone as recipient_phone 
+    FROM transactions t
+    LEFT JOIN users u1 ON lower(u1.wallet_address) = lower(t.sender)
+    LEFT JOIN users u2 ON lower(u2.wallet_address) = lower(t.recipient)
+    WHERE t.sender = ? OR t.recipient = ? 
+    ORDER BY t.created_at DESC LIMIT 100
+  `).all(req.user.wallet, req.user.wallet);
   res.json(txs);
 });
 
