@@ -1,4 +1,4 @@
-# Bangla Coin — Friction-First Blockchain Money 🇧🇩
+# 1. Bangla Coin — Friction-First Blockchain Money 🇧🇩
 
 Bangla Coin is an innovative, **Friction-First** Web3 platform designed to combat scams and fraud through dynamic transaction delays. Unlike traditional blockchains where transactions are instant and irreversible, Bangla Coin introduces a smart "Friction Engine" that slows down high-risk transfers, giving users a window to cancel suspicious transactions before they are finalized on the blockchain.
 
@@ -77,13 +77,13 @@ The risk engine operates off-chain (Node.js), generating a risk score that dicta
 
 ## 🚀 Quick Start Guide
 
-#on Windows
+### on Windows
 
 ```
 .\start-all.ps1
 ```
 
-#on Linux
+### on Linux
 
 ```
 sudo chmod +x ./start-all.sh && ./start-all.sh
