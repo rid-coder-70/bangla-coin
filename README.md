@@ -77,6 +77,9 @@ These screens demonstrate the decentralized governance of group funds.
 ### Validator Node Voting for Transaction Ban
 ![ValidatorNode_VoteToBan](Images/ValidatorNode_VoteToBan.png)
 
+### System Architecture
+![Architecture](Images/Architecture.jpeg)
+
 ---
 
 ## 2. MVP Feature Shortlist
