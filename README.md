@@ -34,37 +34,17 @@ The project is structured as a monorepo with three main components:
 
 ## 🚀 Quick Start Guide
 
-### 1. Prerequisites
-- Node.js (v18+)
-- Local Hardhat Node (or a testnet RPC)
+#on Windows
 
-### 2. Run the Blockchain (Terminal 1)
-```bash
-npx hardhat node
+```
+.\start-all.ps1
 ```
 
-### 3. Start the Backend (Terminal 2)
-```bash
-cd backend
-npm install
-npm run start
+#on Linux
+
 ```
-*Note: The backend runs on `http://localhost:3001`.*
-
-### 4. Start the Frontend (Terminal 3)
-```bash
-cd frontend
-npm install
-npm run dev
+sudo chmod +x ./start-all.sh && ./start-all.sh
 ```
-*Note: The frontend runs on `http://localhost:5173`.*
-
-## 🧪 Testing the Platform
-
-A comprehensive testing guide is available. Please refer to the `bangla_coin_testing_guide.md` for a step-by-step walkthrough of the Agent/User flow, real money transfers, friction timer, DAO voting, and freeze controls.
-
-## 🤝 Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 *Built for the Friction Hackathon 2026 by Team SUST SONGLAP*
