@@ -1,5 +1,5 @@
-# User App Demo: bangla-coin-sust.vercel.app
-Video Presentation and Project Document: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
+**User App Demo**: bangla-coin-sust.vercel.app
+**Video Presentation and Project Document**: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
 
 # 1. Bangla Coin — Friction-First Blockchain Money 🇧🇩
 
