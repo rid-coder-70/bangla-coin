@@ -51,7 +51,6 @@ function CashTab({ token }) {
   const [phone, setPhone] = useState('');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [minting, setMinting] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [balance, setBalance] = useState(null);
@@ -75,18 +74,6 @@ function CashTab({ token }) {
 
   useEffect(() => { fetchBalance(); fetchHistory(); }, [token]);
 
-  const handleMint = async () => {
-    setMinting(true); setError('');
-    try {
-      const res = await fetch(`${API}/agent/mint`, { method: 'POST', headers });
-      const d = await res.json();
-      if (!res.ok) throw new Error(d.error);
-      setSuccess(d.message);
-      fetchBalance();
-    } catch (e) { setError(e.message); }
-    finally { setMinting(false); }
-  };
-
   const handleCashIn = async (e) => {
     e.preventDefault(); setLoading(true); setError('');
     try {
@@ -108,12 +95,11 @@ function CashTab({ token }) {
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-
       <div className="rounded-2xl p-6 text-white relative overflow-hidden shadow-xl"
         style={{ background: 'linear-gradient(135deg, #1e3a2f 0%, #064e3b 40%, #059669 100%)' }}>
         <div className="absolute top-[-30px] right-[-30px] w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
         <p className="text-emerald-200/80 text-sm font-semibold uppercase tracking-wider mb-1">{t('agent_balance')}</p>
-        <p className="text-4xl font-black tracking-tight mb-4">
+        <p className="text-4xl font-black tracking-tight mb-2">
           {balance != null ? Number(balance).toLocaleString() : '—'}
           <span className="text-lg font-bold text-emerald-300 ml-2">BDT</span>
         </p>
@@ -169,7 +155,12 @@ function CashTab({ token }) {
             {history.slice(0, 20).map(tx => (
               <div key={tx.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50 text-sm">
                 <div>
-                  <p className="font-semibold text-slate-700 text-xs">{tx.sender === JSON.parse(localStorage.getItem('user') || '{}').wallet ? t('sent_tx') : t('received_tx')}</p>
+                  <p className="font-semibold text-slate-700 text-[11px]">
+                    {tx.sender === JSON.parse(localStorage.getItem('user') || '{}').wallet 
+                      ? `${t('sent_to')} ${tx.recipient_phone || tx.recipient.substring(0, 10) + '…'}` 
+                      : `${t('received_from')} ${tx.sender_phone || tx.sender.substring(0, 10) + '…'}`
+                    }
+                  </p>
                   <p className="text-[11px] text-slate-400">{new Date(tx.created_at).toLocaleString()}</p>
                 </div>
                 <div className="text-right">

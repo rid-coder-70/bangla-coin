@@ -19,9 +19,15 @@ router.post('/send', authenticateToken, async (req, res) => {
 
   // Resolve phone number → wallet address
   if (!recipient.startsWith('0x')) {
-    const user = db.prepare('SELECT wallet_address, name FROM users WHERE phone = ?').get(recipient);
-    if (!user) return res.status(404).json({ error: `No user found with phone number ${recipient}` });
-    recipient = user.wallet_address;
+    if (recipient.startsWith('888') && recipient.length === 11) {
+      const dao = db.prepare('SELECT id, phone FROM dao_groups WHERE phone = ?').get(recipient);
+      if (!dao) return res.status(404).json({ error: `No community found with number ${recipient}` });
+      recipient = `DAO_${dao.id}_${dao.phone}`;
+    } else {
+      const user = db.prepare('SELECT wallet_address, name FROM users WHERE phone = ?').get(recipient);
+      if (!user) return res.status(404).json({ error: `No user found with phone number ${recipient}` });
+      recipient = user.wallet_address;
+    }
   }
 
 

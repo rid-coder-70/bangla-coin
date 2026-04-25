@@ -192,6 +192,21 @@ export default function DAO({ token }) {
     } catch (e) { setError(e.message); }
   };
 
+  const handleDeleteCommunity = async () => {
+    if (!window.confirm("Are you sure you want to completely delete this community wallet and all its historical proposals? This cannot be undone.")) return;
+    setSubmitting(true); setError('');
+    try {
+      const res = await fetch(`${API}/dao/community/${selectedGroup}`, { method: 'DELETE', headers: authHeaders });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      setSuccess("Community deleted.");
+      setSelectedGroup(null);
+      setGroupInfo(null);
+      await fetchGroups();
+    } catch (e) { setError(e.message); }
+    finally { setSubmitting(false); }
+  };
+
   const handleRemovePoll = async () => {
     if (!removeTarget) return;
     setSubmitting(true); setError('');
@@ -218,7 +233,7 @@ export default function DAO({ token }) {
   };
 
   const copyId = () => {
-    navigator.clipboard.writeText(`#${selectedGroup}`);
+    navigator.clipboard.writeText(groupInfo?.phone || `#${selectedGroup}`);
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   };
 
@@ -267,7 +282,7 @@ export default function DAO({ token }) {
             <div className="relative flex-1">
               <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input value={joinId} onChange={e => setJoinId(e.target.value)}
-                className="input pl-9 text-sm bg-slate-50" placeholder="Community ID (e.g. #3)" required />
+                className="input pl-9 text-sm bg-slate-50" placeholder="Community Number (888...)" required />
             </div>
             <button type="submit" disabled={submitting}
               className="btn btn-primary text-sm py-2 px-4 disabled:opacity-50">
@@ -312,11 +327,17 @@ export default function DAO({ token }) {
               </div>
               <div className="text-right">
                 <button onClick={copyId}
-                  className="flex items-center gap-2 bg-white/15 border border-white/20 rounded-xl px-3 py-2 text-sm font-bold backdrop-blur-md hover:bg-white/25 transition-all">
-                  <Hash className="w-4 h-4" /> {selectedGroup}
+                  className="flex items-center gap-2 bg-white/15 border border-white/20 rounded-xl px-3 py-2 text-sm font-bold backdrop-blur-md hover:bg-white/25 transition-all mb-2">
+                  <Hash className="w-4 h-4" /> {groupInfo.phone || `#${selectedGroup}`}
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5 text-white/50" />}
                 </button>
-                <p className="text-xs text-blue-200 mt-2">{groupInfo.member_count} members</p>
+                {groupInfo.members?.length <= 2 && (
+                  <button onClick={handleDeleteCommunity} disabled={submitting}
+                    className="flex items-center justify-center gap-1.5 w-full bg-red-500/20 text-red-100 hover:text-white hover:bg-red-500/40 border border-red-500/30 rounded-xl px-2 py-1.5 text-[10px] uppercase tracking-wider font-bold transition-all disabled:opacity-50">
+                    Delete Wallet
+                  </button>
+                )}
+                <p className="text-xs text-blue-200 mt-1.5">{groupInfo.member_count} members</p>
               </div>
             </div>
           </div>
@@ -337,9 +358,6 @@ export default function DAO({ token }) {
                       <p className="text-[10px] text-slate-400">{m.phone}</p>
                     </div>
                   </div>
-                  {m.address === groupInfo.owner && (
-                    <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Owner</span>
-                  )}
                 </div>
               ))}
             </div>
