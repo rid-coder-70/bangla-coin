@@ -1,3 +1,6 @@
+# User App Demo: bangla-coin-sust.vercel.app
+Video Presentation and Project Document: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
+
 # 1. Bangla Coin — Friction-First Blockchain Money 🇧🇩
 
 Bangla Coin is an innovative, **Friction-First** Web3 platform designed to combat scams and fraud through dynamic transaction delays. Unlike traditional blockchains where transactions are instant and irreversible, Bangla Coin introduces a smart "Friction Engine" that slows down high-risk transfers, giving users a window to cancel suspicious transactions before they are finalized on the blockchain.
@@ -12,7 +15,9 @@ The core usage of Bangla Coin revolves around its Dynamic Risk Engine. Unlike tr
 
 For a daily user, the experience is intuitive yet protective. When sending money to a verified family member, the "friction" is minimal—perhaps a 10-second countdown. However, if a user attempts to send a large sum to a first-time recipient or a wallet flagged by the community, the system automatically escalates the delay to the 180-second maximum. This critical "cool-down" period allows users to catch mistakes or realize they are being scammed before the funds are permanently committed to the blockchain.
 
-Agents play a vital role in the ecosystem, serving as the bridge between physical cash and digital Bangla Coins. Using the Agent Cash-In feature, users can convert BDT into digital assets securely. Furthermore, the Community Wallet (DAO) functionality allows groups—such as student organizations or small businesses—to manage collective funds. Usage here is democratic: a member proposes a spend, and the funds only release once a majority of the group votes "Yes" on-chain.
+Agents play a vital role in the ecosystem, serving as the bridge between physical cash and digital Bangla Coins. Using the Agent Cash-In feature, users can convert BDT into digital assets securely.
+
+Furthermore, the Community Wallet (DAO) functionality allows groups—such as student organizations or small businesses—to manage collective funds. Usage here is democratic: a member proposes a spend, and the funds only release once a majority of the group votes "Yes" on-chain.
 
 ### Transformative Benefits: Safety and Empowerment
 The primary benefit of Bangla Coin is the mitigation of financial loss. By making "slow money" a feature, the platform effectively kills the "urgency" tactic used by scammers.
