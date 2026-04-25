@@ -90,7 +90,7 @@ These screens demonstrate the decentralized governance of group funds.
 ![ValidatorNode_VoteToBan](Images/ValidatorNode_VoteToBan.png)
 
 ### System Architecture
-![Architecture](Images/BanglaCoin Architecture Diagram.jpeg)
+![Architecture](Images/BanglaCoin%20Architecture%20Diagram.jpeg)
 
 ---
 
