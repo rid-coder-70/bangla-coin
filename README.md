@@ -74,6 +74,9 @@ These screens demonstrate the decentralized governance of group funds.
 | :---: | :---: |
 | ![Validator Node Status](Images/ValidatorNode_Status.png) | ![Validator Node Admin](Images/ValidatorNode_Admin.png) |
 
+### Validator Node Voting for Transaction Ban
+![ValidatorNode_VoteToBan](Images/ValidatorNode_VoteToBan.png)
+
 ---
 
 ## 2. MVP Feature Shortlist
@@ -127,6 +130,8 @@ The risk engine operates off-chain (Node.js), generating a risk score that dicta
 
 
 ## 🚀 Quick Start Guide
+
+Go to 'api-gateway' 'user-app' and run 'npm install'
 
 ### on Windows
 
