@@ -13,12 +13,11 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const fadeUp = { initial:{opacity:0,y:24}, animate:{opacity:1,y:0}, exit:{opacity:0,y:-16}, transition:{duration:0.35,ease:[0.16,1,0.3,1]} };
 
-// ─── Shared Auth Background ────────────────────────────────────────
 function AuthBg({ children }) {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4"
       style={{background:'linear-gradient(145deg,#020d07 0%,#021a10 30%,#032b17 60%,#064e3b 100%)'}}>
-      {/* Animated glow blobs */}
+
       <div className="absolute top-[-120px] left-[-80px] w-[400px] h-[400px] rounded-full opacity-20 blur-3xl"
         style={{background:'radial-gradient(circle,#10b981,transparent 70%)'}}/>
       <div className="absolute bottom-[-80px] right-[-60px] w-[350px] h-[350px] rounded-full opacity-15 blur-3xl"
@@ -26,12 +25,11 @@ function AuthBg({ children }) {
       <div className="absolute top-[40%] right-[10%] w-[200px] h-[200px] rounded-full opacity-10 blur-2xl"
         style={{background:'radial-gradient(circle,#6ee7b7,transparent 70%)'}}/>
 
-      {/* Grid pattern overlay */}
+
       <div className="absolute inset-0 opacity-[0.03]"
         style={{backgroundImage:'linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px)',backgroundSize:'40px 40px'}}/>
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-[22px] mb-5 relative"
             style={{background:'linear-gradient(135deg,#059669,#10b981)'}}>
@@ -49,7 +47,6 @@ function AuthBg({ children }) {
   );
 }
 
-// ─── Auth Card ────────────────────────────────────────────────────
 function AuthCard({ children }) {
   return (
     <div className="rounded-[28px] p-8 border border-white/8 shadow-2xl"
@@ -58,8 +55,6 @@ function AuthCard({ children }) {
     </div>
   );
 }
-
-// ─── Input Field ──────────────────────────────────────────────────
 function AuthInput({ icon: Icon, ...props }) {
   return (
     <div className="relative">
@@ -72,7 +67,6 @@ function AuthInput({ icon: Icon, ...props }) {
   );
 }
 
-// ─── Login Page ───────────────────────────────────────────────────
 function LoginPage({ onLogin, onGoSignup }) {
   const { t } = useTranslation();
   const [phone, setPhone]   = useState('');
@@ -118,7 +112,6 @@ function LoginPage({ onLogin, onGoSignup }) {
             </p>
           </div>
 
-          {/* Step dots */}
           <div className="flex items-center gap-2 mb-6">
             <div className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= 1 ? 'bg-emerald-500' : 'bg-white/10'}`}/>
             <div className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= 2 ? 'bg-emerald-500' : 'bg-white/10'}`}/>
@@ -166,8 +159,6 @@ function LoginPage({ onLogin, onGoSignup }) {
     </AuthBg>
   );
 }
-
-// ─── Signup Page ──────────────────────────────────────────────────
 function SignupPage({ onLogin, onGoLogin }) {
   const [name, setName]     = useState('');
   const [phone, setPhone]   = useState('');
@@ -219,7 +210,7 @@ function SignupPage({ onLogin, onGoLogin }) {
             </p>
           </div>
 
-          {/* Progress */}
+
           <div className="flex items-center gap-2 mb-7">
             {steps.map((s, i) => (
               <div key={s} className="flex items-center gap-2 flex-1 last:flex-none">
@@ -276,7 +267,6 @@ function SignupPage({ onLogin, onGoLogin }) {
   );
 }
 
-// ─── Language Toggle ──────────────────────────────────────────────
 function LangToggle() {
   const { i18n } = useTranslation();
   const isBn = i18n.language === 'bn';
@@ -289,7 +279,6 @@ function LangToggle() {
   );
 }
 
-// ─── Nav Link ─────────────────────────────────────────────────────
 function NavLink({ to, icon: Icon, label }) {
   const loc = useLocation();
   const active = loc.pathname === to;
@@ -300,7 +289,6 @@ function NavLink({ to, icon: Icon, label }) {
   );
 }
 
-// ─── App Shell ────────────────────────────────────────────────────
 function AppShell({ token, onLogout }) {
   const { t } = useTranslation();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -355,14 +343,12 @@ function AppShell({ token, onLogout }) {
   );
 }
 
-// ─── Root ─────────────────────────────────────────────────────────
 export default function App() {
   const [token, setToken]   = useState(() => localStorage.getItem('token'));
-  const [page, setPage]     = useState('login'); // 'login' | 'signup'
+  const [page, setPage]     = useState('login'); 
 
   const handleLogin = (t) => {
     setToken(t);
-    // Force navigate to home so stale routes like /agent don't persist
     if (window.location.pathname !== '/') window.history.replaceState(null, '', '/');
   };
   const handleLogout = () => {

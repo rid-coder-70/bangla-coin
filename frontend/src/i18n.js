@@ -11,7 +11,7 @@ i18n
       en: { translation: en },
       bn: { translation: bn }
     },
-    lng: 'en', // Default to English for now, user can toggle
+    lng: 'en',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false 

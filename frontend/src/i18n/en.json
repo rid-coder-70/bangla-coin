@@ -89,7 +89,7 @@
   "active_proposals": "Active Proposals",
   "no_proposals": "No proposals yet",
   "no_proposals_sub": "Be the first to propose a community spend",
-  "funds_released": "✅ Funds Released — Proposal Passed!",
+  "funds_released": "Funds Released — Proposal Passed!",
   "approve": "Approve",
   "reject": "Reject",
   "yes_votes": "{{yes}} yes / {{no}} no",
@@ -110,9 +110,9 @@
   "received_from": "Received from",
 
   "logout": "Logout",
-  "error_prefix": "⚠️",
-  "cancel_success": "❌ Transfer cancelled.",
-  "send_success": "✅ Transfer queued — it will execute after the delay elapses.",
-  "send_instant": "✅ Transfer queued instantly — no risk detected!",
-  "proposal_success": "✅ Proposal created!"
+  "error_prefix": "",
+  "cancel_success": "Transfer cancelled.",
+  "send_success": "Transfer queued — it will execute after the delay elapses.",
+  "send_instant": "Transfer queued instantly — no risk detected!",
+  "proposal_success": "Proposal created!"
 }

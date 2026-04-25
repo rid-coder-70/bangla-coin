@@ -71,6 +71,8 @@ export default function Home({ token }) {
   const [walletMap, setWalletMap] = useState({});
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+const walletCache = {};
+
   const fetchData = async () => {
     try {
       const [bRes, tRes] = await Promise.all([
@@ -81,7 +83,6 @@ export default function Home({ token }) {
       if (tRes.ok) {
         const data = await tRes.json();
         setTxs(data);
-        // Resolve all unique wallet addresses to phone numbers
         const myWallet = user.wallet?.toLowerCase();
         const addrs = [...new Set(
           data.flatMap(tx => [tx.sender, tx.recipient])
@@ -89,10 +90,23 @@ export default function Home({ token }) {
         )];
         const map = {};
         await Promise.all(addrs.map(async addr => {
+          const lower = addr.toLowerCase();
+          if (walletCache[lower] !== undefined) {
+            if (walletCache[lower] !== null) map[lower] = walletCache[lower];
+            return;
+          }
           try {
             const r = await fetch(`${API}/auth/lookup-wallet/${addr}`, { headers:{Authorization:`Bearer ${token}`} });
-            if (r.ok) { const d = await r.json(); map[addr.toLowerCase()] = d; }
-          } catch { /* ignore */ }
+            if (r.ok) { 
+              const d = await r.json(); 
+              map[lower] = d; 
+              walletCache[lower] = d;
+            } else {
+              walletCache[lower] = null;
+            }
+          } catch { 
+            walletCache[lower] = null;
+          }
         }));
         setWalletMap(map);
       }
@@ -117,7 +131,6 @@ export default function Home({ token }) {
         </div>
       )}
 
-      {/* Balance Hero */}
       <div className="rounded-[32px] p-8 text-white relative overflow-hidden animate-slide-up shadow-xl shadow-emerald-900/10"
         style={{background:'linear-gradient(135deg, #022c22 0%, #064e3b 40%, #059669 100%)'}}>
         <div className="absolute top-[-40px] right-[-40px] w-64 h-64 rounded-full bg-white/5 backdrop-blur-3xl pointer-events-none"/>
@@ -155,7 +168,6 @@ export default function Home({ token }) {
         </div>
       </div>
 
-      {/* Stats */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           {icon: <LayoutGrid className="w-5 h-5"/>, label:t('total_transactions'), val:txs.length,  color:'bg-indigo-50 text-indigo-600', d:'stagger-1'},
@@ -170,8 +182,6 @@ export default function Home({ token }) {
           </motion.div>
         ))}
       </motion.div>
-
-      {/* Tx History */}
       <div className="card border-slate-100 animate-fade-in">
         <div className="flex items-center justify-between mb-5 px-1">
           <h2 className="text-lg font-bold text-slate-800">{t('recent_transactions')}</h2>

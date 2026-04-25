@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, X, Check, ShieldAlert } from 'lucide-react';
+import { AlertTriangle, X, Check, ShieldAlert, Clock } from 'lucide-react';
 
 export default function FrictionTimer({ delaySeconds, onConfirm, onCancel, recipientName, amount, riskReasons }) {
   const { t } = useTranslation();
@@ -38,12 +38,11 @@ export default function FrictionTimer({ delaySeconds, onConfirm, onCancel, recip
       <div className="text-center mb-6">
         <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">{t('delay_active')}</p>
         <h2 className="text-xl font-black text-slate-800 flex items-center justify-center gap-2">
-          {timeLeft <= 0 ? <Check className="w-6 h-6 text-emerald-500" /> : <ClockIcon className="w-6 h-6 text-amber-500" />}
+          {timeLeft <= 0 ? <Check className="w-6 h-6 text-emerald-500" /> : <Clock className="w-6 h-6 text-amber-500" />}
           {timeLeft <= 0 ? t('friction_done_title') : t('friction_timer_title')}
         </h2>
       </div>
 
-      {/* Circular progress */}
       <div className="flex justify-center mb-8">
         <div className="relative w-44 h-44">
           <svg className="w-44 h-44 -rotate-90 drop-shadow-md" viewBox="0 0 140 140">
@@ -64,7 +63,6 @@ export default function FrictionTimer({ delaySeconds, onConfirm, onCancel, recip
         </div>
       </div>
 
-      {/* Transfer details */}
       <div className="bg-slate-50 rounded-xl p-5 mb-6 border border-slate-100 shadow-inner space-y-3">
         <div className="flex justify-between items-start">
           <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">{t('to')}</span>
@@ -111,6 +109,3 @@ export default function FrictionTimer({ delaySeconds, onConfirm, onCancel, recip
   );
 }
 
-function ClockIcon(props) {
-  return <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>;
-}

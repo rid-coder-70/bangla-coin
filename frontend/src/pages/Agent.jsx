@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Banknote, Phone, ArrowDownToLine, MapPin, MessageCircle, Users, Send as SendIcon,
-  Loader2, RefreshCw, CheckCircle2, Info, Filter, Navigation
+  Loader2, RefreshCw, CheckCircle2, Info, Filter, Navigation, Building, Map
 } from 'lucide-react';
 import Toast from '../components/Toast';
 
@@ -14,12 +14,12 @@ const DIVISIONS = [
 ];
 
 const RANGE_LABELS = {
-  near: { label: 'Near', desc: 'Small city area', icon: '📍' },
-  medium: { label: 'Medium', desc: 'Big city', icon: '🏙️' },
-  big: { label: 'Big', desc: 'Division-wide', icon: '🗺️' },
+  near: { label: 'Near', desc: 'Small city area', icon: <MapPin className="w-4 h-4" /> },
+  medium: { label: 'Medium', desc: 'Big city', icon: <Building className="w-4 h-4" /> },
+  big: { label: 'Big', desc: 'Division-wide', icon: <Map className="w-4 h-4" /> },
 };
 
-// ─── Tab Button ──────────────────────────────────────────────
+
 function TabBtn({ active, icon: Icon, label, onClick }) {
   return (
     <button onClick={onClick}
@@ -30,7 +30,6 @@ function TabBtn({ active, icon: Icon, label, onClick }) {
   );
 }
 
-// ─── Range Filter ────────────────────────────────────────────
 function RangeFilter({ range, setRange }) {
   return (
     <div className="flex gap-2">
@@ -45,9 +44,7 @@ function RangeFilter({ range, setRange }) {
   );
 }
 
-// ════════════════════════════════════════════════════════════════
-// TAB 1 — Cash-In / Cash-Out
-// ════════════════════════════════════════════════════════════════
+
 function CashTab({ token }) {
   const { t } = useTranslation();
   const [phone, setPhone] = useState('');
@@ -65,14 +62,14 @@ function CashTab({ token }) {
     try {
       const res = await fetch(`${API}/wallet/balance`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) { const d = await res.json(); setBalance(d.balance); }
-    } catch { /* ignore */ }
+    } catch {}
   };
 
   const fetchHistory = async () => {
     try {
       const res = await fetch(`${API}/agent/history`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) setHistory(await res.json());
-    } catch { /* ignore */ }
+    } catch { }
   };
 
   useEffect(() => { fetchBalance(); fetchHistory(); }, [token]);
@@ -110,7 +107,7 @@ function CashTab({ token }) {
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      {/* Balance + Mint */}
+
       <div className="rounded-2xl p-6 text-white relative overflow-hidden shadow-xl"
         style={{ background: 'linear-gradient(135deg, #1e3a2f 0%, #064e3b 40%, #059669 100%)' }}>
         <div className="absolute top-[-30px] right-[-30px] w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
@@ -128,7 +125,7 @@ function CashTab({ token }) {
         </button>
       </div>
 
-      {/* Cash-In Form */}
+
       <form onSubmit={handleCashIn} className="card space-y-4 border-slate-100 shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -157,7 +154,6 @@ function CashTab({ token }) {
         </button>
       </form>
 
-      {/* Recent Activity */}
       <div className="card border-slate-100">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-slate-800">Recent Activity</h3>
@@ -192,9 +188,7 @@ function CashTab({ token }) {
   );
 }
 
-// ════════════════════════════════════════════════════════════════
-// TAB 2 — Agent Network
-// ════════════════════════════════════════════════════════════════
+
 function NetworkTab({ token }) {
   const [range, setRange] = useState('near');
   const [city, setCity] = useState('');
@@ -215,7 +209,7 @@ function NetworkTab({ token }) {
         setAgents(d.agents || []);
         setMyLoc(d.myLocation || null);
       }
-    } catch { /* ignore */ }
+    } catch {  }
   };
 
   useEffect(() => { fetchNearby(range); }, [range]);
@@ -241,7 +235,6 @@ function NetworkTab({ token }) {
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      {/* Set Location */}
       <div className="card border-slate-100 shadow-md">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -275,7 +268,6 @@ function NetworkTab({ token }) {
         </button>
       </div>
 
-      {/* Range Filter */}
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-slate-800 flex items-center gap-2">
           <Users className="w-4 h-4 text-emerald-600" /> Nearby Agents
@@ -283,7 +275,6 @@ function NetworkTab({ token }) {
         <RangeFilter range={range} setRange={(r) => { setRange(r); fetchNearby(r); }} />
       </div>
 
-      {/* Agent List */}
       {agents.length === 0 ? (
         <div className="card text-center py-8 text-slate-400">
           <Navigation className="w-8 h-8 mx-auto mb-2 opacity-30" />
@@ -312,9 +303,7 @@ function NetworkTab({ token }) {
   );
 }
 
-// ════════════════════════════════════════════════════════════════
-// TAB 3 — Community Chat
-// ════════════════════════════════════════════════════════════════
+
 function ChatTab({ token }) {
   const [range, setRange] = useState('near');
   const [messages, setMessages] = useState([]);
@@ -322,26 +311,32 @@ function ChatTab({ token }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const chatEndRef = useRef(null);
+  const canPollRef = useRef(true);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
 
   const fetchMessages = async (r) => {
+    if (!canPollRef.current) return;
     try {
       const res = await fetch(`${API}/agent/chat/messages?range=${r || range}`, { headers: { Authorization: `Bearer ${token}` } });
-      if (res.ok) setMessages(await res.json());
-    } catch { /* ignore */ }
+      if (!res.ok) {
+        if (res.status === 400) canPollRef.current = false;
+        return;
+      }
+      setMessages(await res.json());
+    } catch {  }
   };
 
   useEffect(() => { fetchMessages(range); }, [range]);
 
-  // Auto-refresh every 5 seconds
+
   useEffect(() => {
     const timer = setInterval(() => fetchMessages(range), 5000);
     return () => clearInterval(timer);
   }, [range]);
 
-  // Scroll to bottom on new messages
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -371,7 +366,7 @@ function ChatTab({ token }) {
         <h3 className="font-bold text-slate-800 flex items-center gap-2">
           <MessageCircle className="w-4 h-4 text-emerald-600" /> Agent Chat
         </h3>
-        <RangeFilter range={range} setRange={(r) => { setRange(r); fetchMessages(r); }} />
+        <RangeFilter range={range} setRange={(r) => { canPollRef.current = true; setRange(r); fetchMessages(r); }} />
       </div>
 
       <div className="text-xs text-slate-400 flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
@@ -379,7 +374,6 @@ function ChatTab({ token }) {
         Messages are scoped to <strong className="text-slate-600">{RANGE_LABELS[range].desc}</strong> range. Auto-refreshes every 5s.
       </div>
 
-      {/* Messages */}
       <div className="card border-slate-100 p-0 overflow-hidden">
         <div className="h-80 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
           {messages.length === 0 ? (
@@ -413,7 +407,6 @@ function ChatTab({ token }) {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Input */}
         <form onSubmit={handleSend} className="flex items-center gap-2 p-3 border-t border-slate-100 bg-white">
           <input type="text" value={input} onChange={e => setInput(e.target.value)}
             className="flex-1 input text-sm bg-slate-50 py-2.5" placeholder="Type a message…" />
@@ -427,9 +420,7 @@ function ChatTab({ token }) {
   );
 }
 
-// ════════════════════════════════════════════════════════════════
-// MAIN AGENT PAGE
-// ════════════════════════════════════════════════════════════════
+
 export default function Agent({ token }) {
   const [tab, setTab] = useState('cash');
 
@@ -440,14 +431,12 @@ export default function Agent({ token }) {
         <p className="text-slate-500 text-sm mt-1">Manage cash-in/out, connect with agents, and chat</p>
       </div>
 
-      {/* Tab Bar */}
       <div className="flex gap-2 animate-slide-up stagger-1">
         <TabBtn active={tab === 'cash'} icon={Banknote} label="Cash-In/Out" onClick={() => setTab('cash')} />
         <TabBtn active={tab === 'network'} icon={Users} label="Agent Network" onClick={() => setTab('network')} />
         <TabBtn active={tab === 'chat'} icon={MessageCircle} label="Chat" onClick={() => setTab('chat')} />
       </div>
 
-      {/* Tab Content */}
       <div className="animate-fade-in">
         {tab === 'cash' && <CashTab token={token} />}
         {tab === 'network' && <NetworkTab token={token} />}

@@ -8,7 +8,7 @@ import Toast from '../components/Toast';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-// ─── Vote Progress Bar ──────────────────────────────────────
+
 function VoteBar({ yes, total }) {
   const pct = total > 0 ? Math.round((yes / total) * 100) : 0;
   const majority = pct > 50;
@@ -26,7 +26,6 @@ function VoteBar({ yes, total }) {
   );
 }
 
-// ─── Proposal Card ──────────────────────────────────────────
 function ProposalCard({ p, onVote, index }) {
   const { t } = useTranslation();
   return (
@@ -63,9 +62,7 @@ function ProposalCard({ p, onVote, index }) {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// MAIN DAO PAGE
-// ═══════════════════════════════════════════════════════════════
+
 export default function DAO({ token }) {
   const { t } = useTranslation();
   const [myGroups, setMyGroups] = useState([]);
@@ -77,7 +74,7 @@ export default function DAO({ token }) {
   const [treasury, setTreasury] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Form states
+
   const [newName, setNewName] = useState('');
   const [joinId, setJoinId] = useState('');
   const [recipient, setRecipient] = useState('');
@@ -94,7 +91,7 @@ export default function DAO({ token }) {
   const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
   const authHeaders = { Authorization: `Bearer ${token}` };
 
-  // ─── Fetch groups ───────────────────────────────────────
+
   const fetchGroups = async () => {
     try {
       const res = await fetch(`${API}/dao/my-groups`, { headers: authHeaders });
@@ -103,11 +100,11 @@ export default function DAO({ token }) {
         setMyGroups(data);
         if (!selectedGroup && data.length > 0) setSelectedGroup(data[0].id);
       }
-    } catch { /* ignore */ }
+    } catch {  }
     finally { setLoading(false); }
   };
 
-  // ─── Fetch group details ────────────────────────────────
+
   const fetchGroupData = async (gid) => {
     if (!gid) return;
     try {
@@ -123,7 +120,7 @@ export default function DAO({ token }) {
       if (tRes.ok) { const d = await tRes.json(); setTreasury(d.treasury); }
       if (jrRes.ok) setJoinRequests(await jrRes.json());
       if (rpRes.ok) setRemovePolls(await rpRes.json());
-    } catch { /* ignore */ }
+    } catch { }
   };
 
   useEffect(() => { fetchGroups(); }, [token]);
@@ -134,7 +131,7 @@ export default function DAO({ token }) {
     return () => clearInterval(timer);
   }, [selectedGroup]);
 
-  // ─── Handlers ───────────────────────────────────────────
+
   const handleCreate = async (e) => {
     e.preventDefault(); setSubmitting(true); setError('');
     try {
@@ -225,9 +222,7 @@ export default function DAO({ token }) {
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   };
 
-  // ═══════════════════════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════════════════════
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
@@ -238,7 +233,6 @@ export default function DAO({ token }) {
         <p className="text-slate-500 text-sm mt-1">{t('community_subtitle')}</p>
       </div>
 
-      {/* ── Community Selector + Actions ────────────────────── */}
       <div className="card border-slate-100 shadow-md animate-slide-up stagger-1">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-slate-800 flex items-center gap-2">
@@ -256,7 +250,7 @@ export default function DAO({ token }) {
           </div>
         </div>
 
-        {/* Create form */}
+
         {showCreate && (
           <form onSubmit={handleCreate} className="flex gap-2 mb-4 animate-fade-in">
             <input value={newName} onChange={e => setNewName(e.target.value)}
@@ -268,7 +262,6 @@ export default function DAO({ token }) {
           </form>
         )}
 
-        {/* Join form */}
         {showJoin && (
           <form onSubmit={handleJoin} className="flex gap-2 mb-4 animate-fade-in">
             <div className="relative flex-1">
@@ -283,7 +276,6 @@ export default function DAO({ token }) {
           </form>
         )}
 
-        {/* Group tabs */}
         {loading ? (
           <div className="skeleton h-10 rounded-xl" />
         ) : myGroups.length === 0 ? (
@@ -306,10 +298,8 @@ export default function DAO({ token }) {
         )}
       </div>
 
-      {/* ══ SELECTED COMMUNITY CONTENT ════════════════════════ */}
       {selectedGroup && groupInfo && (
         <>
-          {/* Treasury + Community ID */}
           <div className="rounded-[24px] p-6 text-white shadow-lg animate-slide-up stagger-1"
             style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)' }}>
             <div className="flex items-center justify-between">
@@ -331,7 +321,6 @@ export default function DAO({ token }) {
             </div>
           </div>
 
-          {/* ── Members + Remove Poll ──────────────────────────── */}
           <div className="card border-slate-100 animate-slide-up stagger-2">
             <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
               <Users className="w-4 h-4 text-emerald-600" /> Members
@@ -354,8 +343,6 @@ export default function DAO({ token }) {
                 </div>
               ))}
             </div>
-
-            {/* Remove member poll */}
             {groupInfo.members?.length > 1 && (
               <div className="pt-3 border-t border-slate-100">
                 <p className="text-xs font-bold text-slate-500 mb-2 flex items-center gap-1.5">
@@ -378,7 +365,6 @@ export default function DAO({ token }) {
             )}
           </div>
 
-          {/* ── Active Remove Polls ────────────────────────────── */}
           {removePolls.length > 0 && (
             <div className="card border-red-100 bg-red-50/30 animate-fade-in">
               <h3 className="font-bold text-red-800 mb-3 flex items-center gap-2">
@@ -407,7 +393,6 @@ export default function DAO({ token }) {
             </div>
           )}
 
-          {/* ── Join Requests ──────────────────────────────────── */}
           {joinRequests.length > 0 && (
             <div className="card border-blue-100 bg-blue-50/30 animate-fade-in">
               <h3 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
@@ -436,7 +421,6 @@ export default function DAO({ token }) {
             </div>
           )}
 
-          {/* ── Create Proposal ────────────────────────────────── */}
           <div className="card animate-slide-up stagger-2 border-slate-100">
             <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <Edit3 className="w-5 h-5 text-emerald-600" /> {t('new_proposal')}
@@ -465,7 +449,6 @@ export default function DAO({ token }) {
             </form>
           </div>
 
-          {/* ── Proposals ──────────────────────────────────────── */}
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">

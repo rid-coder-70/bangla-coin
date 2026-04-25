@@ -19,16 +19,16 @@ export default function Send({ token }) {
   const [pendingTx, setPendingTx] = useState(null);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
-  // Phone-specific state
-  const [lookupUser, setLookupUser] = useState(null);  // { name, wallet }
+
+  const [lookupUser, setLookupUser] = useState(null);  
   const [lookupErr, setLookupErr] = useState('');
   const [lookingUp, setLookingUp] = useState(false);
 
-  // Live phone lookup with debounce
+
   useEffect(() => {
     setLookupUser(null); setLookupErr('');
     if (!isPhone(recipient)) {
-      // if it's a hex address, run flag check instead
+
       if (recipient.startsWith('0x') && recipient.length > 10) checkFlags(recipient);
       return;
     }
@@ -41,7 +41,6 @@ export default function Send({ token }) {
         if (res.ok) {
           const d = await res.json();
           setLookupUser(d);
-          // also check flags on the resolved wallet
           checkFlags(d.wallet);
         } else {
           const d = await res.json();
@@ -51,7 +50,6 @@ export default function Send({ token }) {
       finally { setLookingUp(false); }
     }, 600);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipient]);
 
   const checkFlags = async (addr) => {
@@ -60,7 +58,7 @@ export default function Send({ token }) {
     try {
       const res = await fetch(`${API}/flag/count/${addr}`);
       if (res.ok) { const d = await res.json(); setFlagCount(d.count || 0); }
-    } catch { /* ignore */ }
+    } catch { }
     finally { setChecking(false); }
   };
 
@@ -94,7 +92,7 @@ export default function Send({ token }) {
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ txId: pendingTx.txId }),
         });
-      } catch { /* ignore */ }
+      } catch { }
     }
     setPendingTx(null); setSuccess(t('cancel_success'));
   };
@@ -179,7 +177,6 @@ export default function Send({ token }) {
             />
           </div>
 
-          {/* Resolved user card */}
           {lookupUser && (
             <div className="mt-2 flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 animate-fade-in">
               <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
@@ -190,14 +187,13 @@ export default function Send({ token }) {
             </div>
           )}
 
-          {/* Lookup error */}
+
           {lookupErr && (
             <p className="text-xs text-red-500 mt-2 font-semibold flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5" /> {lookupErr}
             </p>
           )}
 
-          {/* Clean hex address */}
           {!isPhone(recipient) && recipient.length > 5 && flagCount === 0 && !checking && (
             <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1.5 font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -236,7 +232,7 @@ export default function Send({ token }) {
           ['R1', 'First-time recipient / নতুন প্রাপক', '10s'],
           ['R2', '1,000–5,000 BDT', '30s'],
           ['R3', '> 5,000 BDT', '60s'],
-          ['R4', 'Flagged ×3+ / ফ্ল্যাগড ×৩+', '120s ⚠️'],
+          ['R4', 'Flagged ×3+ / ফ্ল্যাগড ×৩+', '120s'],
           ['R5', '5 sends/hr / ঘণ্টায় ৫+', '60s'],
           ['R6', 'Score > 70', '180s max'],
         ].map(([id, desc, act]) => (

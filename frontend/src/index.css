@@ -16,7 +16,7 @@
 }
 
 @layer components {
-  /* ── Buttons ───────────────────────────────────────── */
+  
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
            transition-all duration-200 active:scale-95 select-none cursor-pointer;
@@ -40,7 +40,7 @@
     @apply bg-slate-200 text-slate-400 cursor-not-allowed shadow-none;
   }
 
-  /* ── Cards ────────────────────────────────────────── */
+  
   .card {
     @apply bg-white rounded-2xl shadow-sm border border-slate-100 p-6
            transition-shadow duration-300 hover:shadow-md;
@@ -49,20 +49,20 @@
     @apply backdrop-blur-md bg-white/70 border border-white/50 rounded-2xl shadow-xl;
   }
 
-  /* ── Inputs ───────────────────────────────────────── */
+  
   .input {
     @apply w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium
            focus:ring-2 focus:ring-emerald-400 focus:border-transparent outline-none
            transition-all duration-200 bg-white placeholder:text-slate-400;
   }
 
-  /* ── Status badges ───────────────────────────────── */
+  
   .badge-pending  { @apply bg-amber-100 text-amber-700 border border-amber-200; }
   .badge-executed { @apply bg-emerald-100 text-emerald-700 border border-emerald-200; }
   .badge-cancelled { @apply bg-red-100 text-red-600 border border-red-200; }
   .badge { @apply text-xs font-semibold px-2.5 py-1 rounded-full inline-flex items-center gap-1; }
 
-  /* ── Nav link ────────────────────────────────────── */
+  
   .nav-link {
     @apply flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium
            text-slate-600 hover:text-emerald-700 hover:bg-emerald-50
@@ -72,7 +72,7 @@
     @apply text-emerald-700 bg-emerald-50 font-semibold;
   }
 
-  /* ── Animations ──────────────────────────────────── */
+  
   .animate-fade-in {
     animation: fadeIn 0.4s ease both;
   }
@@ -94,7 +94,7 @@
   .stagger-4 { animation-delay: 0.20s; }
 }
 
-/* ── Keyframes ─────────────────────────────────────── */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -128,7 +128,7 @@
   animation: toastSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ── Skeleton loader ──────────────────────────────── */
+
 .skeleton {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
   background-size: 200% 100%;
@@ -136,18 +136,18 @@
   @apply rounded-lg;
 }
 
-/* ── Gradient text ────────────────────────────────── */
+
 .gradient-text {
   @apply bg-clip-text text-transparent;
   background-image: linear-gradient(135deg, #059669, #10b981, #34d399);
 }
 
-/* ── Hero gradient background ─────────────────────── */
+
 .hero-bg {
   background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 70%, #059669 100%);
 }
 
-/* ── Frosted glass effect ─────────────────────────── */
+
 .glass {
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(16px);

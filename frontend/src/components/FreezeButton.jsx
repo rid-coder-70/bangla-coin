@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Shield, Unlock, Lock, AlertTriangle, X } from 'lucide-react';
+import { Shield, Unlock, Lock, AlertTriangle, X, ShieldAlert } from 'lucide-react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -56,9 +56,9 @@ export default function FreezeButton({ token, isFrozen, onStatusChange }) {
             <Unlock className="w-4 h-4" /> <span>{t('unfreeze')}</span>
           </div>
           <input value={pin} onChange={e => setPin(e.target.value)} type="password" maxLength={4} required
-            className="input text-center tracking-widest text-xl font-black bg-slate-50 py-4"
+            className="w-full text-center tracking-[0.5em] text-2xl font-black bg-slate-50/50 border border-slate-200 focus:border-red-400 focus:ring-4 focus:ring-red-400/20 rounded-xl py-4 transition-all outline-none text-slate-800 placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-sm placeholder:font-semibold"
             placeholder={t('pin_placeholder')}/>
-          {error && <p className="text-red-500 text-xs font-bold bg-red-50 p-2 rounded-lg">{error}</p>}
+          {error && <div className="flex items-center justify-center gap-1.5 text-red-600 text-[11px] font-bold bg-red-50 py-2.5 px-3 rounded-xl border border-red-100"><ShieldAlert className="w-3.5 h-3.5 flex-shrink-0" /> {error}</div>}
           <div className="flex gap-2 mt-2">
             <button type="submit" className="btn bg-red-600 hover:bg-red-500 text-white flex-1" disabled={loading}>
               {loading ? t('unfreezing') : t('confirm_pin')}
@@ -80,13 +80,13 @@ export default function FreezeButton({ token, isFrozen, onStatusChange }) {
       </button>
       {error && <p className="text-red-300 text-[11px] font-medium mt-1.5 absolute">{error}</p>}
 
-      {/* Beautiful Custom Confirmation Modal with React Portal */}
+
       {showConfirm && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in" onClick={() => setShowConfirm(false)} />
           <div className="relative w-full max-w-sm bg-white rounded-[32px] shadow-2xl p-8 animate-scale-in border border-slate-100 text-center overflow-hidden">
             
-            {/* Soft Background Glow */}
+
             <div className="absolute top-[-20px] left-1/2 -translate-x-1/2 w-48 h-48 bg-red-400/20 blur-3xl rounded-full pointer-events-none" />
 
             <div className="mx-auto w-20 h-20 bg-gradient-to-br from-red-50 to-red-100 border-[6px] border-white rounded-full flex items-center justify-center mb-5 shadow-xl shadow-red-200/50 relative z-10">
