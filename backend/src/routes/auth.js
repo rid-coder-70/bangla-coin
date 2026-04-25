@@ -89,14 +89,27 @@ module.exports.authenticateToken = authenticateToken;
 // GET /auth/lookup-phone/:phone — resolve phone number to wallet info
 router.get('/lookup-phone/:phone', authenticateToken, (req, res) => {
   const user = db.prepare('SELECT name, wallet_address FROM users WHERE phone = ?').get(req.params.phone);
-  if (!user) return res.status(404).json({ error: 'No user found with that phone number' });
-  res.json({ name: user.name, wallet: user.wallet_address });
+  if (user) return res.json({ name: user.name, wallet: user.wallet_address });
+
+  const group = db.prepare('SELECT id, name, phone FROM dao_groups WHERE phone = ?').get(req.params.phone);
+  if (group) return res.json({ name: group.name, wallet: `DAO_${group.id}_${group.phone}` });
+
+  res.status(404).json({ error: 'No user or community found with that number' });
 });
 
 // GET /auth/lookup-wallet/:address — resolve wallet address to phone number
 router.get('/lookup-wallet/:address', authenticateToken, (req, res) => {
   const user = db.prepare('SELECT name, phone FROM users WHERE wallet_address = ?').get(req.params.address);
-  if (!user) return res.status(404).json({ error: 'Unknown' });
-  res.json({ name: user.name, phone: user.phone });
+  if (user) return res.json({ name: user.name, phone: user.phone });
+
+  if (req.params.address.startsWith('DAO_')) {
+    const parts = req.params.address.split('_');
+    if (parts.length === 3) {
+      const group = db.prepare('SELECT name, phone FROM dao_groups WHERE id = ?').get(parts[1]);
+      if (group) return res.json({ name: group.name, phone: group.phone });
+    }
+  }
+
+  res.status(404).json({ error: 'Unknown' });
 });
 

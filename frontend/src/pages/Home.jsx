@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, ArrowDownLeft, RefreshCw, Send, CheckCircle2, Clock, CheckCircle, Activity, LayoutGrid, XCircle, Building2 } from 'lucide-react';
 import FreezeButton from '../components/FreezeButton';
 
@@ -34,7 +34,7 @@ function TxRow({ tx, userWallet, walletMap, index }) {
     : (counterAddr === 'DAO Treasury' ? 'DAO Treasury' : counterAddr?.substring(0, 12) + '…');
 
   return (
-    <div className={`flex items-center justify-between p-4 hover:bg-slate-50 rounded-xl transition-colors duration-150 animate-slide-up stagger-${Math.min(index+1,4)}`}>
+    <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className={`flex items-center justify-between p-4 hover:bg-slate-50 rounded-xl transition-colors duration-150`}>
       <div className="flex items-center gap-4">
         <div className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm ${isSend?'bg-red-50 text-red-500 border border-red-100':'bg-emerald-50 text-emerald-600 border border-emerald-100'}`}>
           {isSend ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownLeft className="w-5 h-5" />}
@@ -58,7 +58,7 @@ function TxRow({ tx, userWallet, walletMap, index }) {
         </div>
         {tx.delay_seconds > 0 && <p className="text-[11px] text-slate-400 mt-1 flex items-center justify-end gap-1"><Clock className="w-3 h-3"/> {tx.delay_seconds}s</p>}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -120,18 +120,20 @@ const walletCache = {};
   const executed = txs.filter(t => t.status==='executed').length;
 
   return (
-    <div className="space-y-6">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="space-y-6">
+      <AnimatePresence>
       {frozen && (
-        <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 px-5 py-4 rounded-2xl shadow-sm animate-fade-in">
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 px-5 py-4 rounded-2xl shadow-sm overflow-hidden">
           <XCircle className="w-6 h-6 text-red-500" />
           <div>
             <p className="font-bold">{t('wallet_frozen')}</p>
             <p className="text-sm opacity-80">{t('wallet_frozen_sub')}</p>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
-      <div className="rounded-[32px] p-8 text-white relative overflow-hidden animate-slide-up shadow-xl shadow-emerald-900/10"
+      <motion.div layout transition={{ type: 'spring' }} className="rounded-[32px] p-8 text-white relative overflow-hidden shadow-xl shadow-emerald-900/10"
         style={{background:'linear-gradient(135deg, #022c22 0%, #064e3b 40%, #059669 100%)'}}>
         <div className="absolute top-[-40px] right-[-40px] w-64 h-64 rounded-full bg-white/5 backdrop-blur-3xl pointer-events-none"/>
         <div className="absolute bottom-[-20px] right-[80px] w-48 h-48 rounded-full bg-white/5 backdrop-blur-xl pointer-events-none"/>
@@ -166,7 +168,7 @@ const walletCache = {};
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
@@ -182,7 +184,7 @@ const walletCache = {};
           </motion.div>
         ))}
       </motion.div>
-      <div className="card border-slate-100 animate-fade-in">
+      <motion.div layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card border-slate-100">
         <div className="flex items-center justify-between mb-5 px-1">
           <h2 className="text-lg font-bold text-slate-800">{t('recent_transactions')}</h2>
           <button onClick={fetchData} className="text-xs font-semibold text-slate-400 hover:text-emerald-600 flex items-center gap-1.5 transition-colors">
@@ -205,7 +207,7 @@ const walletCache = {};
             {txs.map((tx,i) => <TxRow key={tx.id} tx={tx} userWallet={user.wallet} walletMap={walletMap} index={i}/>)}
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

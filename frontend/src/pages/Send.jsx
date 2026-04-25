@@ -4,6 +4,7 @@ import { Shield, ShieldAlert, ShieldCheck, Send as SendIcon, Loader2, ArrowLeft,
 import FrictionTimer from '../components/FrictionTimer';
 import FlagWarning from '../components/FlagWarning';
 import Toast from '../components/Toast';
+import { motion } from 'framer-motion';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -104,8 +105,8 @@ export default function Send({ token }) {
 
   if (pendingTx) {
     return (
-      <div className="max-w-md mx-auto">
-        <button onClick={handleCancel} className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors animate-fade-in">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="max-w-md mx-auto">
+        <button onClick={handleCancel} className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
           <ArrowLeft className="w-4 h-4" /> {t('cancel')}
         </button>
         <FrictionTimer
@@ -116,7 +117,7 @@ export default function Send({ token }) {
           onCancel={handleCancel}
           onConfirm={handleConfirm}
         />
-      </div>
+      </motion.div>
     );
   }
 
@@ -125,16 +126,16 @@ export default function Send({ token }) {
     (isPhone(recipient) ? !!lookupUser : true) && !lookupErr;
 
   return (
-    <div className="max-w-md mx-auto space-y-5">
+    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="max-w-md mx-auto space-y-5">
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      <div className="animate-slide-up">
+      <motion.div layout transition={{ type: 'spring', stiffness: 300 }}>
         <h1 className="text-2xl font-bold text-slate-800">{t('send_money')}</h1>
         <p className="text-slate-500 text-sm mt-1">{t('send_subtitle')}</p>
-      </div>
+      </motion.div>
 
-      <div className="card bg-emerald-50 border-emerald-100 animate-slide-up stagger-1 p-5 shadow-sm">
+      <motion.div layout initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="card bg-emerald-50 border-emerald-100 p-5 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 border border-emerald-200">
             <Shield className="w-5 h-5 text-emerald-600" />
@@ -144,11 +145,11 @@ export default function Send({ token }) {
             <p className="text-emerald-700/80 text-[13px] mt-1 leading-relaxed font-medium">{t('friction_desc')}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {flagCount > 0 && <FlagWarning flagCount={flagCount} address={lookupUser?.wallet || recipient} canReport={false} />}
 
-      <form onSubmit={handleSend} className="card space-y-6 animate-slide-up stagger-2 border-slate-100 shadow-md">
+      <motion.form layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} onSubmit={handleSend} className="card space-y-6 border-slate-100 shadow-md">
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2">
             Recipient — Phone Number
@@ -224,17 +225,17 @@ export default function Send({ token }) {
             : <span className="flex items-center gap-2">{t('send')} <SendIcon className="w-4 h-4 ml-1" /></span>
           }
         </button>
-      </form>
+      </motion.form>
 
-      <div className="card text-xs text-slate-500 space-y-2.5 animate-slide-up stagger-3 bg-slate-50 border-slate-100">
+      <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="card text-xs text-slate-500 space-y-2.5 bg-slate-50 border-slate-100">
         <p className="font-bold text-slate-700 mb-2 flex items-center gap-2"><Info className="w-4 h-4" /> {t('risk_rules_title')}</p>
         {[
           ['R1', 'First-time recipient / নতুন প্রাপক', '10s'],
-          ['R2', '1,000–5,000 BDT', '30s'],
-          ['R3', '> 5,000 BDT', '60s'],
-          ['R4', 'Flagged ×3+ / ফ্ল্যাগড ×৩+', '120s'],
-          ['R5', '5 sends/hr / ঘণ্টায় ৫+', '60s'],
-          ['R6', 'Score > 70', '180s max'],
+          ['R2', '1,000–5,000 BDT', '20s'],
+          ['R3', '> 5,000 BDT', '30s'],
+          ['R4', 'Flagged ×3+ / ফ্ল্যাগড ×৩+', '40s'],
+          ['R5', '5 sends/hr / ঘণ্টায় ৫+', '50s'],
+          ['R6', 'Score > 70', '60s max'],
         ].map(([id, desc, act]) => (
           <div key={id} className="flex items-center justify-between py-1 border-b border-slate-200/50 last:border-0">
             <span className="flex items-center gap-2">
@@ -244,7 +245,7 @@ export default function Send({ token }) {
             <span className="text-amber-600 font-bold">{act}</span>
           </div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -174,11 +174,14 @@ db.exec(`
   );
 `);
 
-// ─── Safe migrations for existing databases ──────────────────────────────────
 const userCols = db.pragma('table_info(users)').map(c => c.name);
 if (!userCols.includes('initial_credit'))
   db.exec("ALTER TABLE users ADD COLUMN initial_credit REAL NOT NULL DEFAULT 0");
 if (!userCols.includes('role'))
   db.exec("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'");
+
+const daoGroupsCols = db.pragma('table_info(dao_groups)').map(c => c.name);
+if (!daoGroupsCols.includes('phone'))
+  db.exec("ALTER TABLE dao_groups ADD COLUMN phone TEXT");
 
 module.exports = db;

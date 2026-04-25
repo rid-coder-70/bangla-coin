@@ -4,6 +4,7 @@ import {
   Landmark, Vote, Edit3, RefreshCw, ThumbsUp, ThumbsDown, CheckCircle2,
   Plus, Hash, Users, UserPlus, UserMinus, LogIn, Phone, Copy, Check
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Toast from '../components/Toast';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -29,7 +30,7 @@ function VoteBar({ yes, total }) {
 function ProposalCard({ p, onVote, index }) {
   const { t } = useTranslation();
   return (
-    <div className={`card border-2 hover:shadow-lg transition-all duration-300 animate-slide-up stagger-${Math.min(index + 1, 4)} ${p.executed ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-100'}`}>
+    <motion.div layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.1 }} className={`card border-2 hover:shadow-lg transition-all duration-300 ${p.executed ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-100'}`}>
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="font-bold text-slate-800">{p.description || t('community_spend')}</p>
@@ -58,7 +59,7 @@ function ProposalCard({ p, onVote, index }) {
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -239,19 +240,19 @@ export default function DAO({ token }) {
 
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="max-w-2xl mx-auto space-y-6">
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      <div className="animate-slide-up">
+      <motion.div layout transition={{ type: 'spring' }}>
         <h1 className="text-2xl font-bold text-slate-800">{t('community_wallet')}</h1>
         <p className="text-slate-500 text-sm mt-1">{t('community_subtitle')}</p>
-      </div>
+      </motion.div>
 
-      <div className="card border-slate-100 shadow-md animate-slide-up stagger-1">
-        <div className="flex items-center justify-between mb-4">
+      <motion.div layout initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="card border-slate-100 shadow-md">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <h3 className="font-bold text-slate-800 flex items-center gap-2">
-            <Users className="w-4 h-4 text-emerald-600" /> My Communities
+            <Users className="w-4 h-4 text-emerald-600 flex-shrink-0" /> My Communities
           </h3>
           <div className="flex gap-2">
             <button onClick={() => { setShowCreate(!showCreate); setShowJoin(false); }}
@@ -311,38 +312,39 @@ export default function DAO({ token }) {
             ))}
           </div>
         )}
-      </div>
+      </motion.div>
 
       {selectedGroup && groupInfo && (
-        <>
-          <div className="rounded-[24px] p-6 text-white shadow-lg animate-slide-up stagger-1"
+        <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+          <motion.div layout className="rounded-[24px] p-6 text-white shadow-lg relative overflow-hidden"
             style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)' }}>
-            <div className="flex items-center justify-between">
+            <div className="absolute top-[-30px] right-[-30px] w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
+            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div>
                 <p className="text-blue-100 text-sm font-semibold uppercase tracking-wider">{groupInfo.name}</p>
-                <p className="text-4xl font-black mt-1">
+                <p className="text-4xl font-black mt-1 break-all">
                   {treasury != null ? Number(treasury).toLocaleString() : '—'}
                   <span className="text-xl text-blue-200 font-bold ml-2">BDT</span>
                 </p>
               </div>
-              <div className="text-right">
+              <div className="flex flex-col sm:items-end gap-2">
                 <button onClick={copyId}
-                  className="flex items-center gap-2 bg-white/15 border border-white/20 rounded-xl px-3 py-2 text-sm font-bold backdrop-blur-md hover:bg-white/25 transition-all mb-2">
-                  <Hash className="w-4 h-4" /> {groupInfo.phone || `#${selectedGroup}`}
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5 text-white/50" />}
+                  className="flex items-center justify-center gap-2 bg-white/15 border border-white/20 rounded-xl px-4 py-2.5 text-sm font-bold backdrop-blur-md hover:bg-white/25 transition-all w-full sm:w-auto whitespace-nowrap">
+                  <Hash className="w-4 h-4 flex-shrink-0" /> <span className="truncate">{groupInfo.phone || `#${selectedGroup}`}</span>
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-300 flex-shrink-0" /> : <Copy className="w-3.5 h-3.5 text-white/50 flex-shrink-0" />}
                 </button>
                 {groupInfo.members?.length <= 2 && (
                   <button onClick={handleDeleteCommunity} disabled={submitting}
-                    className="flex items-center justify-center gap-1.5 w-full bg-red-500/20 text-red-100 hover:text-white hover:bg-red-500/40 border border-red-500/30 rounded-xl px-2 py-1.5 text-[10px] uppercase tracking-wider font-bold transition-all disabled:opacity-50">
+                    className="flex items-center justify-center gap-1.5 w-full sm:w-auto bg-red-500/20 text-red-100 hover:text-white hover:bg-red-500/40 border border-red-500/30 rounded-xl px-3 py-2 text-[10px] uppercase tracking-wider font-bold transition-all disabled:opacity-50">
                     Delete Wallet
                   </button>
                 )}
-                <p className="text-xs text-blue-200 mt-1.5">{groupInfo.member_count} members</p>
+                <p className="text-xs text-blue-200 mt-1 text-center sm:text-right">{groupInfo.member_count} members</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="card border-slate-100 animate-slide-up stagger-2">
+          <motion.div layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card border-slate-100">
             <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
               <Users className="w-4 h-4 text-emerald-600" /> Members
             </h3>
@@ -381,10 +383,10 @@ export default function DAO({ token }) {
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {removePolls.length > 0 && (
-            <div className="card border-red-100 bg-red-50/30 animate-fade-in">
+            <motion.div layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card border-red-100 bg-red-50/30">
               <h3 className="font-bold text-red-800 mb-3 flex items-center gap-2">
                 <UserMinus className="w-4 h-4" /> Remove Member Polls
               </h3>
@@ -408,11 +410,11 @@ export default function DAO({ token }) {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {joinRequests.length > 0 && (
-            <div className="card border-blue-100 bg-blue-50/30 animate-fade-in">
+            <motion.div layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card border-blue-100 bg-blue-50/30">
               <h3 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
                 <UserPlus className="w-4 h-4" /> Join Requests
               </h3>
@@ -436,10 +438,10 @@ export default function DAO({ token }) {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
-          <div className="card animate-slide-up stagger-2 border-slate-100">
+          <motion.div layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card border-slate-100">
             <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <Edit3 className="w-5 h-5 text-emerald-600" /> {t('new_proposal')}
             </h2>
@@ -465,9 +467,9 @@ export default function DAO({ token }) {
                 {submitting ? t('creating') : t('create_proposal')}
               </button>
             </form>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div layout>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <Vote className="w-5 h-5 text-emerald-600" /> {t('active_proposals')}
@@ -487,9 +489,9 @@ export default function DAO({ token }) {
                 {proposals.map((p, i) => <ProposalCard key={p.id} p={p} onVote={handleVote} index={i} />)}
               </div>
             )}
-          </div>
-        </>
+          </motion.div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

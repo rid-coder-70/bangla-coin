@@ -4,6 +4,7 @@ import {
   Banknote, Phone, ArrowDownToLine, MapPin, MessageCircle, Users, Send as SendIcon,
   Loader2, RefreshCw, CheckCircle2, Info, Filter, Navigation, Building, Map
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Toast from '../components/Toast';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -51,6 +52,7 @@ function CashTab({ token }) {
   const [phone, setPhone] = useState('');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
+  const [minting, setMinting] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [balance, setBalance] = useState(null);
@@ -74,6 +76,18 @@ function CashTab({ token }) {
 
   useEffect(() => { fetchBalance(); fetchHistory(); }, [token]);
 
+  const handleMint = async () => {
+    setMinting(true); setError('');
+    try {
+      const res = await fetch(`${API}/agent/mint`, { method: 'POST', headers });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      setSuccess(d.message);
+      fetchBalance();
+    } catch (e) { setError(e.message); }
+    finally { setMinting(false); }
+  };
+
   const handleCashIn = async (e) => {
     e.preventDefault(); setLoading(true); setError('');
     try {
@@ -91,11 +105,11 @@ function CashTab({ token }) {
   };
 
   return (
-    <div className="space-y-5">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="space-y-5">
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      <div className="rounded-2xl p-6 text-white relative overflow-hidden shadow-xl"
+      <motion.div layout className="rounded-2xl p-6 text-white relative overflow-hidden shadow-xl"
         style={{ background: 'linear-gradient(135deg, #1e3a2f 0%, #064e3b 40%, #059669 100%)' }}>
         <div className="absolute top-[-30px] right-[-30px] w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
         <p className="text-emerald-200/80 text-sm font-semibold uppercase tracking-wider mb-1">{t('agent_balance')}</p>
@@ -104,10 +118,10 @@ function CashTab({ token }) {
           <span className="text-lg font-bold text-emerald-300 ml-2">BDT</span>
         </p>
 
-      </div>
+      </motion.div>
 
 
-      <form onSubmit={handleCashIn} className="card space-y-4 border-slate-100 shadow-md">
+      <motion.form layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} onSubmit={handleCashIn} className="card space-y-4 border-slate-100 shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
             <Banknote className="w-4 h-4 text-emerald-600" />
@@ -133,9 +147,9 @@ function CashTab({ token }) {
             ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Processing…</span>
             : <span className="flex items-center gap-2"><SendIcon className="w-4 h-4" /> Cash-In</span>}
         </button>
-      </form>
+      </motion.form>
 
-      <div className="card border-slate-100">
+      <motion.div layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card border-slate-100">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-slate-800">{t('recent_activity')}</h3>
           <button onClick={fetchHistory} className="text-xs text-slate-400 hover:text-emerald-600 font-semibold flex items-center gap-1">
@@ -169,8 +183,8 @@ function CashTab({ token }) {
             ))}
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -219,11 +233,11 @@ function NetworkTab({ token }) {
   };
 
   return (
-    <div className="space-y-5">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="space-y-5">
       <Toast message={success} type="success" onClose={() => setSuccess('')} />
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      <div className="card border-slate-100 shadow-md">
+      <motion.div layout className="card border-slate-100 shadow-md">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
             <MapPin className="w-4 h-4 text-blue-600" />
@@ -254,14 +268,14 @@ function NetworkTab({ token }) {
           className="btn btn-primary py-2 text-sm disabled:opacity-50">
           {saving ? t('saving_loc') : t('save_loc')}
         </button>
-      </div>
+      </motion.div>
 
-      <div className="flex items-center justify-between">
+      <motion.div layout className="flex items-center justify-between">
         <h3 className="font-bold text-slate-800 flex items-center gap-2">
           <Users className="w-4 h-4 text-emerald-600" /> Nearby Agents
         </h3>
         <RangeFilter t={t} range={range} setRange={(r) => { setRange(r); fetchNearby(r); }} />
-      </div>
+      </motion.div>
 
       {agents.length === 0 ? (
         <div className="card text-center py-8 text-slate-400">
@@ -287,7 +301,7 @@ function NetworkTab({ token }) {
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -349,22 +363,22 @@ function ChatTab({ token }) {
   };
 
   return (
-    <div className="space-y-4">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="space-y-4">
       <Toast message={error} type="error" onClose={() => setError('')} />
 
-      <div className="flex items-center justify-between">
+      <motion.div layout className="flex items-center justify-between">
         <h3 className="font-bold text-slate-800 flex items-center gap-2">
           <MessageCircle className="w-4 h-4 text-emerald-600" /> Agent Chat
         </h3>
         <RangeFilter t={t} range={range} setRange={(r) => { canPollRef.current = true; setRange(r); fetchMessages(r); }} />
-      </div>
+      </motion.div>
 
-      <div className="text-xs text-slate-400 flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+      <motion.div layout className="text-xs text-slate-400 flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
         <Info className="w-3.5 h-3.5 flex-shrink-0" />
         {t('msg_scoped')} <strong className="text-slate-600">{RANGE_LABELS[range].desc}</strong> {t('msg_autorefresh')}
-      </div>
+      </motion.div>
 
-      <div className="card border-slate-100 p-0 overflow-hidden">
+      <motion.div layout className="card border-slate-100 p-0 overflow-hidden">
         <div className="h-80 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
           {messages.length === 0 ? (
             <div className="text-center py-12 text-slate-400">
@@ -405,8 +419,8 @@ function ChatTab({ token }) {
             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <SendIcon className="w-4 h-4" />}
           </button>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -416,23 +430,23 @@ export default function Agent({ token }) {
   const [tab, setTab] = useState('cash');
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="animate-slide-up">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-2xl mx-auto space-y-6">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
         <h1 className="text-2xl font-bold text-slate-800">{t('agent_portal')}</h1>
         <p className="text-slate-500 text-sm mt-1">{t('agent_subtitle')}</p>
-      </div>
+      </motion.div>
 
-      <div className="flex gap-2 animate-slide-up stagger-1">
+      <motion.div layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, type: 'spring', stiffness: 300 }} className="flex gap-2">
         <TabBtn active={tab === 'cash'} icon={Banknote} label={t('tab_cash')} onClick={() => setTab('cash')} />
         <TabBtn active={tab === 'network'} icon={Users} label={t('tab_network')} onClick={() => setTab('network')} />
         <TabBtn active={tab === 'chat'} icon={MessageCircle} label={t('tab_chat')} onClick={() => setTab('chat')} />
-      </div>
+      </motion.div>
 
-      <div className="animate-fade-in">
+      <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
         {tab === 'cash' && <CashTab token={token} />}
         {tab === 'network' && <NetworkTab token={token} />}
         {tab === 'chat' && <ChatTab token={token} />}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
