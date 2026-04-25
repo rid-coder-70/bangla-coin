@@ -4,26 +4,26 @@ Bangla Coin is an innovative, **Friction-First** Web3 platform designed to comba
 
 ![Bangla Coin Cover](Images/BanglaCoinCover.png)
 
-Bangla Coin: Securing the Future of Bangladeshi Digital Finance
+### Bangla Coin: Securing the Future of Bangladeshi Digital Finance
 In the rapidly evolving digital landscape of Bangladesh, speed has often been the primary metric for financial success. However, the rise of "instant" mobile financial services has inadvertently fueled a parallel surge in digital fraud, social engineering scams, and accidental transfers. Bangla Coin, developed by Team SUST SONGLAP, introduces a paradigm shift: Friction-First Finance. By prioritizing security over velocity, Bangla Coin provides a robust, blockchain-backed solution designed to protect every Taka.
 
-Strategic Usage: Intentional Friction
+### Strategic Usage: Intentional Friction
 The core usage of Bangla Coin revolves around its Dynamic Risk Engine. Unlike traditional apps that process payments in milliseconds, Bangla Coin evaluates every transaction against six specific risk rules.
 
 For a daily user, the experience is intuitive yet protective. When sending money to a verified family member, the "friction" is minimal—perhaps a 10-second countdown. However, if a user attempts to send a large sum to a first-time recipient or a wallet flagged by the community, the system automatically escalates the delay to the 180-second maximum. This critical "cool-down" period allows users to catch mistakes or realize they are being scammed before the funds are permanently committed to the blockchain.
 
 Agents play a vital role in the ecosystem, serving as the bridge between physical cash and digital Bangla Coins. Using the Agent Cash-In feature, users can convert BDT into digital assets securely. Furthermore, the Community Wallet (DAO) functionality allows groups—such as student organizations or small businesses—to manage collective funds. Usage here is democratic: a member proposes a spend, and the funds only release once a majority of the group votes "Yes" on-chain.
 
-Transformative Benefits: Safety and Empowerment
+### Transformative Benefits: Safety and Empowerment
 The primary benefit of Bangla Coin is the mitigation of financial loss. By making "slow money" a feature, the platform effectively kills the "urgency" tactic used by scammers.
 
- - Fraud Deterrence via "Vote to Ban": The decentralized network of Validator Nodes acts as a digital jury. If a transaction appears fraudulent, validators can vote to ban it, preventing the movement of stolen funds. This collective oversight provides a layer of security that centralized systems often struggle to replicate in real-time.
+ - **Fraud Deterrence via "Vote to Ban"**: The decentralized network of Validator Nodes acts as a digital jury. If a transaction appears fraudulent, validators can vote to ban it, preventing the movement of stolen funds. This collective oversight provides a layer of security that centralized systems often struggle to replicate in real-time.
 
- - Immutable Transparency: Every transaction is recorded on a SHA-256 hash-linked ledger. For the user, this means an indisputable, permanent record of their financial history that cannot be altered or deleted by any central authority.
+ - **Immutable Transparency**: Every transaction is recorded on a SHA-256 hash-linked ledger. For the user, this means an indisputable, permanent record of their financial history that cannot be altered or deleted by any central authority.
 
- - Empowerment through DAOs: For rural communities and small cooperatives in Bangladesh, the DAO feature eliminates the "trusted middleman" problem. It ensures that no single individual can vanish with group savings, as the smart contract enforces collective permission for every withdrawal.
+ - **Empowerment through DAOs**: For rural communities and small cooperatives in Bangladesh, the DAO feature eliminates the "trusted middleman" problem. It ensures that no single individual can vanish with group savings, as the smart contract enforces collective permission for every withdrawal.
 
- - Resilience and Reward: By running on a Permissioned Proof-of-Authority (PoA) chain, the system remains energy-efficient and fast enough for high-volume use while rewarding the distributed validators who provide the computational power to keep the network alive.
+ - **Resilience and Reward**: By running on a Permissioned Proof-of-Authority (PoA) chain, the system remains energy-efficient and fast enough for high-volume use while rewarding the distributed validators who provide the computational power to keep the network alive.
 
 In summary, Bangla Coin is not just a payment tool; it is a safety net. It empowers the citizens of Bangladesh to embrace blockchain technology with the confidence that their hard-earned money is protected by the very code that moves it.
 
