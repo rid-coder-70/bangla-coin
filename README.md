@@ -34,8 +34,8 @@ Furthermore, the Community Wallet (DAO) functionality allows groups—such as st
 ### Transformative Benefits: Safety and Empowerment
 The primary benefit of Bangla Coin is the mitigation of financial loss. By making "slow money" a feature, the platform effectively kills the "urgency" tactic used by scammers.
 
- - **Fraud Deterrence via "Vote to Ban"**: The decentralized network of Validator Nodes acts as a digital jury. If a transaction appears fraudulent, validators can vote to ban it, preventing the movement of stolen funds. This collective oversight provides a layer of security that centralized systems often struggle to replicate in real-time.
-
+ - **Data Safty using Blockchain**: Once a transaction passes BFT consensus across all the validators, it is written simultaneously to every chain copy as a cryptographically hashed block — each block containing the fingerprint of the previous one, so altering any past record breaks the entire chain and is immediately detected. With all independent copies, a hacker would need to compromise more than 50% nodes at once to succeed, which the consensus mechanism prevents by flagging and isolating any diverging node and force-syncing it back to the clean ledger automatically.
+   
  - **Immutable Transparency**: Every transaction is recorded on a SHA-256 hash-linked ledger. For the user, this means an indisputable, permanent record of their financial history that cannot be altered or deleted by any central authority.
 
  - **Empowerment through DAOs**: For rural communities and small cooperatives in Bangladesh, the DAO feature eliminates the "trusted middleman" problem. It ensures that no single individual can vanish with group savings, as the smart contract enforces collective permission for every withdrawal.
@@ -90,9 +90,6 @@ These screens demonstrate the decentralized governance of group funds.
 | Node Status | Node Admin |
 | :---: | :---: |
 | ![Validator Node Status](Images/ValidatorNode_Status.png) | ![Validator Node Admin](Images/ValidatorNode_Admin.png) |
-
-### Validator Node Voting for Transaction Ban
-![ValidatorNode_VoteToBan](Images/ValidatorNode_VoteToBan.png)
 
 ### System Architecture
 ![Architecture](Images/BanglaCoin%20Architecture%20Diagram.jpeg)
