@@ -1,16 +1,13 @@
 # User App Demo: [bangla-coin-sust.vercel.app](https://bangla-coin-sust.vercel.app) <br/>
-*There was a slight mistake while filling out the submission form for Friction Hackathon.
-Instead of `bangla-coin-sust.vercel.app` , we mistakenly wrote `bangla_coin_sust.vercel.app`
-Please visit the correct link. We apologize for this mistake.*
 
 #### Default Credentials
 `010000000001`, `010000000002` are agent accounts. Account with any other phone number is a regular user account. The default OTP is `123456`.
 
 **Video Presentation and Project Document**: https://drive.google.com/drive/folders/1qRZsYYU4KDS6i1sEx78BtwdCKXHmdW8M
 
-Instant payments are convenient, but they are a paradise for scammers. We have introducted Frictions to inherently protect users from losing their life saving moneys.
-We implemented an intelligent Risk Engine, where high-risk transactions trigger a mandatory blockchain-enforced delay.
-Unlike other services, that run on a single central server, we built a Distributed Validator Network where all independent nodes must reach consensus before any transfer is committed. We prioritize human safety over raw transaction speed. Our moto is to make Money transaction system secure and reliable including friction, where instantesoity is not mandatory.
+Instant payments are convenient, but they are a paradise for scammers. We have introduced **Friction** to inherently protect users from losing their life savings.
+We implemented a decentralized money transaction system using Blockchain technology, along with an intelligent Risk Engine where high-risk transactions trigger a mandatory blockchain-enforced delay.
+Unlike other services that run on a single central server, we built a **Distributed Validator Network** where all independent nodes must reach consensus before any transfer is committed. This eliminates the monopoly of banks and services like bKash, enabling lower transaction fees through a multi-validator, miner-like architecture. We prioritize human safety over raw transaction speed. Our motto is to make money transactions secure and reliable — a system where **instantaneity is not the first priority**.
 
 
 # 1. Bangla Coin — Friction-First Blockchain Money 🇧🇩
@@ -34,11 +31,13 @@ Furthermore, the Community Wallet (DAO) functionality allows groups—such as st
 ### Transformative Benefits: Safety and Empowerment
 The primary benefit of Bangla Coin is the mitigation of financial loss. By making "slow money" a feature, the platform effectively kills the "urgency" tactic used by scammers.
 
- - **Fraud Deterrence via "Vote to Ban"**: The decentralized network of Validator Nodes acts as a digital jury. If a transaction appears fraudulent, validators can vote to ban it, preventing the movement of stolen funds. This collective oversight provides a layer of security that centralized systems often struggle to replicate in real-time.
+- **Data Safty using Blockchain**: Once a transaction passes BFT consensus across all the validators, it is written simultaneously to every chain copy as a cryptographically hashed block — each block containing the fingerprint of the previous one, so altering any past record breaks the entire chain and is immediately detected. With all independent copies, a hacker would need to compromise more than 50% nodes at once to succeed, which the consensus mechanism prevents by flagging and isolating any diverging node and force-syncing it back to the clean ledger automatically.
 
- - **Immutable Transparency**: Every transaction is recorded on a SHA-256 hash-linked ledger. For the user, this means an indisputable, permanent record of their financial history that cannot be altered or deleted by any central authority.
+- **Fraud Deterrence via "Vote to Ban"**: The decentralized network of Validator Nodes acts as a digital jury. If a transaction appears fraudulent, validators can vote to ban it, preventing the movement of stolen funds. This collective oversight provides a layer of security that centralized systems often struggle to replicate in real-time.
 
- - **Empowerment through DAOs**: For rural communities and small cooperatives in Bangladesh, the DAO feature eliminates the "trusted middleman" problem. It ensures that no single individual can vanish with group savings, as the smart contract enforces collective permission for every withdrawal.
+- **Immutable Transparency**: Every transaction is recorded on a SHA-256 hash-linked ledger. For the user, this means an indisputable, permanent record of their financial history that cannot be altered or deleted by any central authority.
+
+- **Empowerment through DAOs**: For rural communities and small cooperatives in Bangladesh, the DAO feature eliminates the "trusted middleman" problem. It ensures that no single individual can vanish with group savings, as the smart contract enforces collective permission for every withdrawal.
 
  - **Resilience and Reward**: By running on a Permissioned Proof-of-Authority (PoA) chain, the system remains energy-efficient and fast enough for high-volume use while rewarding the distributed validators who provide the computational power to keep the network alive.
 
@@ -54,8 +53,8 @@ In summary, Bangla Coin is not just a payment tool; it is a safety net. It empow
 | **License** | MIT (Fully Open Source) |
 | **Chain Type** | Permissioned PoA (Hardhat local → Polygon Mumbai testnet) |
 | **Peg** | 1 Bangla Coin = 1 BDT (Fully collateralized) |
-| **Max Delay** | 3 minutes (180 seconds, enforced on-chain) |
-| **MVP Scope** | 48-hour hackathon build |
+| **Max Delay** | 1 minutes (60 seconds, enforced on-chain) |
+| **MVP Scope** | 72-hour hackathon build |
 
 
 ## 📸 Screenshots
@@ -122,7 +121,6 @@ The 48-hour build focuses on eight core features. All other functionality is def
 
 ## 3. System Architecture
 The system utilizes a four-layer stack where the blockchain serves as the single source of truth.
-
 
 
 * **Layer 1 — User App:** (React + Vite + Tailwind) Handles JWT/HTTP requests for users (sending/DAO) and agents (cash-in).
