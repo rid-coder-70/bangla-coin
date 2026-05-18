@@ -90,9 +90,6 @@ These screens demonstrate the decentralized governance of group funds.
 | :---: | :---: |
 | ![Validator Node Status](Images/ValidatorNode_Status.png) | ![Validator Node Admin](Images/ValidatorNode_Admin.png) |
 
-### Validator Node Voting for Transaction Ban
-![ValidatorNode_VoteToBan](Images/ValidatorNode_VoteToBan.png)
-
 ### System Architecture
 ![Architecture](Images/BanglaCoin%20Architecture%20Diagram.jpeg)
 
