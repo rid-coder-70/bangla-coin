@@ -5,20 +5,20 @@
   "Freeze": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
   "Wallets": {
     "Alice": {
-      "address": "0x7BCb178DEf513C67dEa16154556BA2e3c1c8187F",
-      "privateKey": "0xd8ed07881a584beba05e79b47d360d58ae55f38db7a98b559a96e63970c9c303"
+      "address": "0xC46F382546AD860059137D891FC260266Db58b8e",
+      "privateKey": "0x575eb75c47fa825990887ea93802fe764ebc2e4b52f6fa9309d0148852657019"
     },
     "Bob": {
-      "address": "0x1F765cf000179fE3eE3b5830C96dcB32BA8735Be",
-      "privateKey": "0xbd68b36d6bd720d4335aa72ddc0ff967fab08c20fbfbaa0c73bfcfea7c19ef0f"
+      "address": "0x05f760925577f7267D9f3b89aDdF3E9813E1be13",
+      "privateKey": "0xb06d522032715d54db4d493fae0e80665f34f5b18ff1b1e86471cc3382fe9c9a"
     },
     "Agent": {
-      "address": "0x9A676f7516ad819E35178778AD92ac008E14b8CC",
-      "privateKey": "0xc60064241bf8b6df7a0526d5af1ad177b2aacaca0492dff9b8f84e5c6b9bb0d2"
+      "address": "0x0B5668fcDf3a2BbaD4b5982033D3c52C7375Da6b",
+      "privateKey": "0x3093f64c7fd6da170ad210aa9acf1b8e520416edfb550f06e63a164a97df06fb"
     },
     "Malicious": {
-      "address": "0x84B7e13C8aD2111Ee36f99D5bCFeC9b682A7084C",
-      "privateKey": "0xc47830ef8d28bb053ee19c7356e1094b05e6789e620f9bb35ea3bdbc560af4f5"
+      "address": "0xE09Cc4c7caBeeeA850d88F622C77464c694a9E7e",
+      "privateKey": "0xf1330965be21b4ac0965b09d9da1126eba9a20d15b1ba05705b2467452122afb"
     }
   }
 }
